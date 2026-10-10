@@ -1,0 +1,12 @@
+# 本仓库只管理凯立德车机模拟器（kaili-wince-simulator.html 及配套文档）
+# 以下为工作区内与本项目无关的目录
+trae/
+workbuddyclaw/
+test/
+
+# 临时与构建产物
+*.log
+*.tmp
+node_modules/
+.DS_Store
+Thumbs.db
