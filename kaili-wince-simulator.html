@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>凯立德车机模拟器 · WinCE 6.0 · 丰田 2DIN</title>
+<style>
+  :root{
+    --panel:#1b1d20; --panel2:#26292d; --edge:#0c0d0e;
+    --kld-blue:#0a63b8; --kld-blue2:#1287e0; --kld-sky:#2ea3f2;
+    --text:#e8ecf1; --dim:#8b949e; --ok:#3fb950; --warn:#d29922; --err:#f85149;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-user-select:none; user-select:none;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(1200px 700px at 50% 20%, #2b2f35 0%, #14161a 60%, #0b0c0e 100%);
+    font-family:"Microsoft YaHei","Segoe UI",sans-serif; color:var(--text);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:100vh; padding:16px; gap:10px;
+  }
+  h1{font-size:15px; font-weight:600; letter-spacing:2px; color:#cfd6de;}
+  h1 small{color:var(--dim); font-weight:400; letter-spacing:0; margin-left:8px;}
+
+  /* ===== 车机面板（丰田风格双 DIN 外壳） ===== */
+  #unit{
+    background:linear-gradient(#33373d, #1d2024 40%, #15171a);
+    border:1px solid #000; border-radius:12px; padding:14px 16px 12px;
+    box-shadow:0 18px 50px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  #unitTop{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:0 4px;}
+  #unitTop .brand{font-size:11px; letter-spacing:3px; color:#9aa3ac;}
+  #unitTop .disc{font-size:10px; color:#6b737c;}
+  #bezel{
+    position:relative; background:#0a0b0c; border-radius:8px; padding:10px;
+    border:1px solid #000;
+  }
+  #screen{
+    position:relative; width:800px; height:480px; overflow:hidden;
+    background:#000; border:2px solid #000; border-radius:3px;
+    transform-origin:top left;
+  }
+  /* 实体按键行 */
+  #hwrow{display:flex; align-items:center; gap:10px; margin-top:10px; padding:0 4px;}
+  .hwbtn{
+    background:linear-gradient(#3a3f45, #24272b); color:#cfd6de; border:1px solid #000;
+    border-radius:5px; font-size:11px; padding:6px 12px; cursor:pointer; letter-spacing:1px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .hwbtn:active{transform:translateY(1px); background:#1c1f22;}
+  .hwbtn.on{color:#7ee787; box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 0 8px rgba(63,185,80,.5);}
+  #volKnob{
+    margin-left:auto; width:52px; height:52px; border-radius:50%;
+    background:conic-gradient(#444 0 25%, #2a2d31 0 100%);
+    border:2px solid #000; position:relative; cursor:pointer;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.8);
+  }
+  #volKnob::after{content:"VOL"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:9px; color:#9aa3ac;}
+  #sdSlot{
+    display:flex; align-items:center; gap:6px; font-size:10px; color:#9aa3ac;
+    background:#101214; border:1px solid #000; border-radius:4px; padding:6px 10px; cursor:pointer;
+  }
+  #sdSlot .led{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 6px var(--ok);}
+  #sdSlot.out .led{background:#555; box-shadow:none;}
+  #hint{font-size:11px; color:#6b737c; text-align:center; max-width:900px; line-height:1.7;}
+
+  /* ===== 屏幕内各应用 ===== */
+  .screen-page{position:absolute; inset:0; display:none;}
+  .screen-page.active{display:block;}
+
+  /* ---- WinCE 启动画面 ---- */
+  #bootPage{background:#000; color:#dfe6ee; font-family:Consolas,monospace; font-size:14px; padding:30px 40px;}
+  #bootLogo{font-size:26px; letter-spacing:4px; color:#fff; margin-bottom:6px;}
+  #bootLogo b{color:#3aa0ff;}
+  #bootSub{color:#7d8791; font-size:12px; margin-bottom:24px;}
+  #bootLines{line-height:1.9; font-size:13px; white-space:pre-wrap;}
+  #bootLines .ok{color:var(--ok);} #bootLines .warn{color:var(--warn);}
+
+  /* ---- 主界面（启动器） ---- */
+  #launcher{
+    background:
+      linear-gradient(160deg, rgba(10,99,184,.9), rgba(6,44,84,.95) 55%, #041a30),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 2px, transparent 2px 8px);
+  }
+  #launcherTop{
+    height:44px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 16px; background:rgba(0,0,0,.35); font-size:14px;
+  }
+  #launcherTop .clock{font-size:18px; font-weight:600;}
+  #launcherTop .sub{font-size:11px; color:#9fd0ff;}
+  #iconGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; padding:26px 34px;}
+  .licon{
+    height:118px; border-radius:10px; cursor:pointer; text-align:center;
+    background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+    border:1px solid rgba(255,255,255,.22);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    color:#fff; font-size:14px; transition:.15s;
+    box-shadow:0 4px 10px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .licon:hover{background:linear-gradient(180deg, rgba(255,255,255,.3), rgba(46,163,242,.25)); transform:translateY(-2px);}
+  .licon .ico{font-size:38px; line-height:1; text-shadow:0 3px 6px rgba(0,0,0,.5);}
+  .licon small{font-size:10px; color:#bcd9f5;}
+  #launcherFoot{position:absolute; bottom:0; left:0; right:0; height:34px; background:rgba(0,0,0,.4);
+    display:flex; align-items:center; justify-content:space-between; padding:0 16px; font-size:11px; color:#9fd0ff;}
+
+  /* ---- 导航（凯立德风格） ---- */
+  #navPage{background:#dcd6c4;}
+  #navCanvas{position:absolute; inset:0; width:800px; height:480px;}
+  #navTop{
+    position:absolute; top:0; left:0; right:0; height:34px;
+    background:linear-gradient(#0a63b8, #074b8d); display:flex; align-items:center; gap:14px;
+    padding:0 12px; font-size:13px; color:#eaf4ff; border-bottom:1px solid #04355f;
+  }
+  #navTop .gpd{display:flex; align-items:center; gap:5px;}
+  #navTop .sig{display:flex; gap:2px; align-items:flex-end; height:12px;}
+  #navTop .sig i{width:4px; background:#5fd0ff; display:block;}
+  #navTop .sig i:nth-child(1){height:4px} #navTop .sig i:nth-child(2){height:7px}
+  #navTop .sig i:nth-child(3){height:10px} #navTop .sig i:nth-child(4){height:13px}
+  #navTop .sig.off i{background:#3d6f9c;}
+  #navTitle{position:absolute; left:50%; transform:translateX(-50%); font-weight:600; letter-spacing:2px;}
+  #navRight{margin-left:auto; display:flex; gap:12px; align-items:center;}
+  #navBtns{position:absolute; top:40px; left:8px; display:flex; flex-direction:column; gap:8px;}
+  .navbtn{
+    width:56px; height:46px; border-radius:8px; cursor:pointer; font-size:12px; color:#fff;
+    background:linear-gradient(#1287e0, #0a5fae); border:1px solid #04355f;
+    box-shadow:0 2px 5px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.3);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  }
+  .navbtn span{font-size:18px; line-height:1;}
+  .navbtn:active{background:linear-gradient(#0a5fae, #1287e0);}
+  #navBottom{
+    position:absolute; left:0; right:0; bottom:0; height:56px;
+    background:linear-gradient(#083b6b, #04243f); border-top:2px solid #0a63b8;
+    display:flex; align-items:center; padding:0 14px; gap:16px; color:#eaf4ff;
+  }
+  #navBottom .maneuver{display:flex; align-items:center; gap:10px; min-width:250px;}
+  #navBottom .mico{font-size:30px; color:#ffd34d;}
+  #navBottom .mtext b{font-size:17px;} #navBottom .mtext small{display:block; font-size:11px; color:#9fd0ff;}
+  #navBottom .rest{margin-left:auto; text-align:right; font-size:13px;}
+  #navBottom .rest b{font-size:19px; color:#ffd34d;}
+  #navOverlay{position:absolute; inset:34px 0 56px 0; display:none;}
+  #navOverlay.active{display:block;}
+  .navPanel{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:560px; max-height:330px; background:rgba(7,40,72,.96); border:2px solid #1287e0;
+    border-radius:10px; padding:14px 16px; color:#eaf4ff; overflow:auto;
+  }
+  .navPanel h3{font-size:15px; margin-bottom:10px; color:#ffd34d; letter-spacing:1px;}
+  .npRow{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
+  .npBtn{background:linear-gradient(#1287e0,#0a5fae); border:1px solid #04355f; color:#fff;
+    border-radius:6px; padding:8px 14px; font-size:13px; cursor:pointer;}
+  .npBtn:hover{filter:brightness(1.15);}
+  .npList{list-style:none;}
+  .npList li{padding:9px 10px; border-bottom:1px dashed rgba(255,255,255,.18); cursor:pointer;
+    display:flex; justify-content:space-between; font-size:13px; border-radius:4px;}
+  .npList li:hover{background:rgba(18,135,224,.35);}
+  .npList li small{color:#9fd0ff;}
+  .npInput{width:100%; padding:8px 10px; font-size:14px; background:#04243f; color:#fff;
+    border:1px solid #1287e0; border-radius:6px; outline:none; margin-bottom:10px;}
+  .npClose{position:absolute; top:8px; right:10px; cursor:pointer; color:#9fd0ff; font-size:16px;}
+  #arrived{
+    position:absolute; left:50%; top:44%; transform:translate(-50%,-50%); display:none;
+    background:rgba(4,36,63,.95); border:2px solid #ffd34d; color:#ffd34d; font-size:20px;
+    padding:16px 30px; border-radius:10px;
+  }
+
+  /* ---- SD 卡管理 / 设置 ---- */
+  .stdPage{background:linear-gradient(#0d2b4a, #071a2e); color:#eaf4ff; font-size:13px;}
+  .pageTop{height:40px; background:rgba(0,0,0,.35); display:flex; align-items:center; padding:0 14px; gap:14px;}
+  .pageTop b{letter-spacing:2px;} .pageTop small{color:#9fd0ff;}
+  .pageBody{position:absolute; top:40px; left:0; right:0; bottom:0; display:flex;}
+  #sdTree{width:300px; border-right:1px solid rgba(255,255,255,.15); overflow:auto; padding:8px;}
+  .tnode{padding:4px 6px; cursor:pointer; border-radius:4px; white-space:nowrap; font-family:Consolas,monospace; font-size:12.5px;}
+  .tnode:hover{background:rgba(18,135,224,.3);}
+  .tnode.sel{background:#1287e0;}
+  .tdir{color:#ffd34d;} .tfile{color:#cfe6ff;}
+  #sdDetail{flex:1; padding:12px; display:flex; flex-direction:column; gap:10px; overflow:auto;}
+  #sdDetail .bar{display:flex; gap:8px; flex-wrap:wrap;}
+  .btn{background:linear-gradient(#1287e0,#0a5fae); border:1px solid #04355f; color:#fff;
+    border-radius:6px; padding:7px 13px; font-size:13px; cursor:pointer;}
+  .btn.gray{background:linear-gradient(#49525c,#333a41); border-color:#222;}
+  .btn.red{background:linear-gradient(#b3413b,#8a2f2b); border-color:#5a1e1b;}
+  #sdPreview{flex:1; background:#041c31; border:1px solid rgba(255,255,255,.18); border-radius:6px;
+    padding:10px; font-family:Consolas,monospace; font-size:12.5px; white-space:pre-wrap; overflow:auto;
+    color:#bfe0ff; -webkit-user-select:text; user-select:text;}
+  #sdDrop{border:2px dashed #2ea3f2; border-radius:8px; padding:8px 12px; color:#9fd0ff; font-size:12px;}
+  #sdDrop.hot{background:rgba(46,163,242,.2);}
+  #setBody{padding:18px 26px; overflow:auto; line-height:2; font-size:13.5px;}
+  #setBody table{border-collapse:collapse; min-width:520px;}
+  #setBody td{border:1px solid rgba(255,255,255,.18); padding:6px 12px;}
+  #setBody td:first-child{color:#9fd0ff; width:190px; background:rgba(0,0,0,.2);}
+
+  /* ---- 收音机 ---- */
+  #radioPage{background:radial-gradient(500px 300px at 50% 0%, #173a5c, #061423);}
+  #radioWrap{padding:36px 50px;}
+  #radioFreq{font-size:64px; font-weight:700; color:#ffd34d; font-family:Consolas,monospace;}
+  #radioFreq small{font-size:20px; color:#9fd0ff;}
+  #radioBand{display:flex; gap:8px; margin:14px 0 20px;}
+  #radioPresets{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; width:640px;}
+  .preset{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); border-radius:8px;
+    padding:14px 0; text-align:center; cursor:pointer; font-size:15px; color:#eaf4ff;}
+  .preset:hover{background:rgba(18,135,224,.4);}
+  .preset small{display:block; color:#9fd0ff; font-size:11px; margin-top:4px;}
+  .placeholder{display:flex; align-items:center; justify-content:center; height:100%; flex-direction:column; gap:12px; color:#9fd0ff;}
+  .placeholder .big{font-size:64px;}
+
+  /* ---- 测试控制台 ---- */
+  #console{
+    position:absolute; left:0; right:0; bottom:0; height:230px; display:none; flex-direction:column;
+    background:rgba(4,8,12,.94); border-top:2px solid #3fb950; z-index:50;
+    font-family:Consolas,"Courier New",monospace; font-size:12.5px;
+  }
+  #console.active{display:flex;}
+  #consoleHead{display:flex; align-items:center; gap:12px; padding:5px 10px; background:rgba(63,185,80,.12); color:#7ee787;}
+  #consoleHead b{letter-spacing:1px;}
+  #consoleHead span{color:#8b949e; font-size:11px;}
+  #consoleHead .x{margin-left:auto; cursor:pointer; color:#8b949e;}
+  #consoleLog{flex:1; overflow:auto; padding:6px 10px; white-space:pre-wrap; line-height:1.55; -webkit-user-select:text; user-select:text;}
+  #consoleLog .t{color:#6b737c;} #consoleLog .ok{color:#3fb950;} #consoleLog .warn{color:#d29922;}
+  #consoleLog .err{color:#f85149;} #consoleLog .in{color:#79c0ff;} #consoleLog .nmea{color:#d2a8ff;}
+  #consoleCmd{display:flex; border-top:1px solid #1d2530;}
+  #consoleCmd span{color:#3fb950; padding:7px 0 7px 10px;}
+  #consoleInput{flex:1; background:transparent; border:0; outline:0; color:#e6edf3; font:inherit; padding:7px 10px;
+    -webkit-user-select:text; user-select:text;}
+
+  /* 模拟 exe 运行窗口 */
+  #exeWin{
+    position:absolute; left:120px; top:80px; width:560px; height:300px; display:none; z-index:60;
+    background:#ece9d8; border:2px solid #0a63b8; border-radius:4px; color:#111;
+    box-shadow:0 12px 30px rgba(0,0,0,.6); flex-direction:column;
+  }
+  #exeWin.active{display:flex;}
+  #exeWinBar{background:linear-gradient(#1287e0,#0a5fae); color:#fff; padding:5px 8px; display:flex; font-size:12.5px;}
+  #exeWinBar .x{margin-left:auto; cursor:pointer; background:#b3413b; width:18px; text-align:center; border-radius:2px;}
+  #exeWinBody{flex:1; padding:14px; font-size:13px; line-height:1.8; overflow:auto; font-family:Consolas,monospace;
+    -webkit-user-select:text; user-select:text;}
+  .toast{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,.85);
+    color:#fff; padding:12px 22px; border-radius:8px; font-size:15px; z-index:70; display:none; border:1px solid #333;}
+</style>
+</head>
+<body>
+
+<h1>凯立德车机模拟器 <small>Windows Embedded CE 6.0 · 丰田 2DIN · 800×480 · 虚拟 SD 卡测试通道</small></h1>
+
+<div id="unit">
+  <div id="unitTop">
+    <span class="brand">TOYOTA · 2DIN AUDIO&NAVIGATION</span>
+    <span class="disc">MP3 / WMA / CD — CALDIC</span>
+  </div>
+  <div id="bezel">
+    <div id="screen">
+
+      <!-- 启动 -->
+      <div id="bootPage" class="screen-page active">
+        <div id="bootLogo">Windows Embedded <b>CE 6.0</b></div>
+        <div id="bootSub">TOYOTA Head Unit · BSP 1.4.2 · NAND 128MB · SDRAM 64MB</div>
+        <div id="bootLines"></div>
+      </div>
+
+      <!-- 主界面 -->
+      <div id="launcher" class="screen-page">
+        <div id="launcherTop">
+          <span class="sub">TOYOTA 车载多媒体系统</span>
+          <span class="clock" id="clk">00:00</span>
+        </div>
+        <div id="iconGrid">
+          <div class="licon" data-app="nav"><span class="ico">🧭</span>卫星导航<small>KLD NaviOne.exe</small></div>
+          <div class="licon" data-app="radio"><span class="ico">📻</span>收音机<small>FM / AM</small></div>
+          <div class="licon" data-app="dvd"><span class="ico">💿</span>DVD / 视频<small>无媒介</small></div>
+          <div class="licon" data-app="bt"><span class="ico">📞</span>蓝牙电话<small>未连接</small></div>
+          <div class="licon" data-app="sd"><span class="ico">💾</span>SD 卡管理<small>安装 / 测试通道</small></div>
+          <div class="licon" data-app="set"><span class="ico">⚙️</span>系统设置<small>CE6.0 系统信息</small></div>
+          <div class="licon" data-app="console"><span class="ico">🧪</span>测试控制台<small>调试 / 日志通道</small></div>
+          <div class="licon" data-app="reboot"><span class="ico">🔄</span>重启系统<small>Cold Boot</small></div>
+        </div>
+        <div id="launcherFoot">
+          <span id="sdInfo">SD 卡：已插入 · NaviOne 地图已就绪</span>
+          <span>WINCE 6.0 · KLD C系列（模拟）</span>
+        </div>
+      </div>
+
+      <!-- 导航 -->
+      <div id="navPage" class="screen-page">
+        <canvas id="navCanvas" width="800" height="480"></canvas>
+        <div id="navTop">
+          <span class="gpd">🛰 <span id="satCount">0</span> 星</span>
+          <span class="sig" id="sigBars"><i></i><i></i><i></i><i></i></span>
+          <span id="navTitle">凯立德移动导航系统</span>
+          <span id="navRight">
+            <span id="gpsPortTxt">COM1 / 4800bps</span>
+            <span id="spd">0 km/h</span>
+            <span id="clk2">00:00</span>
+          </span>
+        </div>
+        <div id="navBtns">
+          <div class="navbtn" data-nb="menu"><span>🏠</span>菜单</div>
+          <div class="navbtn" data-nb="find"><span>🔍</span>查找</div>
+          <div class="navbtn" data-nb="zin"><span>➕</span>放大</div>
+          <div class="navbtn" data-nb="zout"><span>➖</span>缩小</div>
+          <div class="navbtn" data-nb="view"><span>🧭</span>视角</div>
+          <div class="navbtn" data-nb="exit"><span>↩️</span>退出</div>
+        </div>
+        <div id="navOverlay"></div>
+        <div id="arrived">已到达目的地</div>
+        <div id="navBottom">
+          <div class="maneuver">
+            <span class="mico" id="mIco">⬆️</span>
+            <span class="mtext"><b id="mTxt">未规划路线</b><small id="mSub">请设置目的地</small></span>
+          </div>
+          <div class="rest"><b id="restDist">--</b> · 剩余 <span id="restTime">--</span></div>
+        </div>
+      </div>
+
+      <!-- SD 卡管理（安装 / 测试通道） -->
+      <div id="sdPage" class="screen-page stdPage">
+        <div class="pageTop"><b>SD 卡管理</b><small id="sdStateTxt">已挂载 · FAT32</small>
+          <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span></div>
+        <div class="pageBody">
+          <div id="sdTree"></div>
+          <div id="sdDetail">
+            <div id="sdDrop">安装通道：把软件/地图包文件拖到这里，或点「安装文件」——文件写入虚拟 SD 卡并持久化（localStorage）。</div>
+            <div class="bar">
+              <button class="btn" id="btnInstall">📂 安装文件…</button>
+              <button class="btn" id="btnNewFile">📄 新建文本</button>
+              <button class="btn gray" id="btnSaveEdit">💾 保存编辑</button>
+              <button class="btn gray" id="btnDown">⬇ 导出文件</button>
+              <button class="btn red" id="btnDel">🗑 删除</button>
+              <button class="btn red" id="btnFormat">⚠ 格式化 SD</button>
+              <button class="btn gray" id="btnEject">⏏ 弹出/插入</button>
+            </div>
+            <div id="sdPreview">← 左侧选择文件查看/编辑内容</div>
+          </div>
+        </div>
+        <input type="file" id="fileInput" multiple style="display:none">
+      </div>
+
+      <!-- 系统设置 -->
+      <div id="setPage" class="screen-page stdPage">
+        <div class="pageTop"><b>系统设置 · 关于本机</b>
+          <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span></div>
+        <div id="setBody">
+          <table>
+            <tr><td>操作系统</td><td>Windows Embedded CE 6.0（模拟内核 6.00）</td></tr>
+            <tr><td>机型</td><td>丰田专车专用 2DIN · 后装导航机（凯立德车机专用版适配）</td></tr>
+            <tr><td>CPU / 内存</td><td>ARM11 800MHz（模拟）· SDRAM 64MB · NAND 128MB</td></tr>
+            <tr><td>屏幕</td><td>8.0 英寸电阻屏 · 800 × 480 · 65536 色</td></tr>
+            <tr><td>导航软件</td><td>凯立德 GPS 移动导航系统 C 系列 · 车机专用版（模拟）</td></tr>
+            <tr><td>GPS 端口 / 波特率</td><td id="setPort">COM1 / 4800 bps（读取 \NaviOne\naviconfig.txt）</td></tr>
+            <tr><td>地图数据</td><td id="setMap">SD:\NaviOne\ （由虚拟 SD 卡提供）</td></tr>
+            <tr><td>SD 卡</td><td id="setSd">已插入 · 文件 0 个</td></tr>
+            <tr><td>机器码</td><td id="setSerial">—</td></tr>
+          </table>
+          <div class="bar" style="display:flex; gap:8px; margin-top:14px;">
+            <button class="btn" data-app="console">🧪 打开测试控制台</button>
+            <button class="btn gray" data-app="sd">💾 SD 卡管理</button>
+            <button class="btn red" data-app="reboot">🔄 冷启动</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 收音机 -->
+      <div id="radioPage" class="screen-page">
+        <div id="radioWrap">
+          <div class="pageTop" style="background:transparent; padding:0; height:auto; margin-bottom:16px;">
+            <b>收音机</b><small id="radioMode">FM1 · 立体声</small>
+            <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span>
+          </div>
+          <div id="radioFreq">101.7<small> MHz</small></div>
+          <div id="radioBand">
+            <button class="btn" data-band="FM1">FM1</button>
+            <button class="btn" data-band="FM2">FM2</button>
+            <button class="btn" data-band="AM">AM</button>
+            <button class="btn gray" id="radioPrev">◀ 频率-</button>
+            <button class="btn gray" id="radioNext">频率+ ▶</button>
+          </div>
+          <div id="radioPresets"></div>
+        </div>
+      </div>
+
+      <!-- DVD / 蓝牙 占位 -->
+      <div id="dvdPage" class="screen-page stdPage"><div class="placeholder"><div class="big">💿</div><div>未检测到光盘（请插入 DVD）</div><button class="btn gray" data-app="home">返回主界面</button></div></div>
+      <div id="btPage" class="screen-page stdPage"><div class="placeholder"><div class="big">📞</div><div>蓝牙未连接 · 请在手机端搜索 “TOYOTA-HU”</div><button class="btn gray" data-app="home">返回主界面</button></div></div>
+
+      <!-- 运行中的 exe 窗口 -->
+      <div id="exeWin"><div id="exeWinBar"><span id="exeWinTitle">程序</span><span class="x" id="exeWinX">×</span></div><div id="exeWinBody"></div></div>
+
+      <!-- 测试控制台 -->
+      <div id="console">
+        <div id="consoleHead"><b>TEST CHANNEL · 调试控制台</b>
+          <span>命令: help / dir / cat / write / del / gps / nmea / port / run / log</span>
+          <span class="x" id="consoleX">收起 (F12)</span></div>
+        <div id="consoleLog"></div>
+        <div id="consoleCmd"><span>&gt;</span><input id="consoleInput" autocomplete="off" spellcheck="false" placeholder="输入命令，回车执行"></div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+
+  <div id="hwrow">
+    <button class="hwbtn" id="btnPower">POWER</button>
+    <button class="hwbtn" id="btnNav">NAV</button>
+    <button class="hwbtn" id="btnMenu">MENU</button>
+    <button class="hwbtn" id="btnEjectHw">EJECT</button>
+    <button class="hwbtn" id="btnTest">TEST ⚗</button>
+    <div id="sdSlot" title="点击弹出/插入虚拟 SD 卡"><span class="led"></span><span id="sdSlotTxt">SD CARD</span></div>
+    <div id="volKnob"></div>
+  </div>
+</div>
+
+<div id="hint">
+  调研结论：2010 年代前后老款丰田（卡罗拉/凯美瑞 2007–2011 等）后装/专车专用车机普遍运行 <b>Windows Embedded CE 6.0</b>（少量早期机型为 CE 5.0），凯立德地图以 SD 卡 \NaviOne 目录形式装载，NaviOne.exe 为入口，端口/波特率由 naviconfig.txt 控制。<br>
+  测试通道：①「SD 卡管理」拖入文件即可安装并持久化；② 「测试控制台」(F12) 支持 dir/cat/write/gps/nmea/port/run 等命令；③ 全局 JS API：<b>window.kld</b>（可在浏览器 DevTools 直接调用）。
+</div>
+
+<script>
+/* =======================================================================
+   凯立德车机模拟器 —— 单文件测试版
+   系统背景：Windows Embedded CE 6.0 · 800x480 · 地图位于 SD:\NaviOne
+   ======================================================================= */
+const $ = id => document.getElementById(id);
+const RES = {w:800, h:480};
+
+/* ---------------- 虚拟 SD 卡（安装/测试通道） ---------------- */
+const SD_KEY = 'kld_sim_sd_v3';
+const SEED = {
+  '/NaviOne/NaviOne.exe':            '[PE32 ARM 模拟占位] 凯立德导航主程序 (NaviOne.exe) v3.7',
+  '/NaviOne/NaviOne.dll':            '[模拟] 凯立德地图渲染核心',
+  '/NaviOne/NaviOneSCH.dll':         '[模拟] 语音/播报组件（删除会导致无语音）',
+  '/NaviOne/naviconfig.txt':         '[GPS]\nPort=COM1\nBaud=4800\nGPS_On=1\nFilter=0\n',
+  '/NaviOne/NaviResFile/NaviConfig.dll': '[模拟] 端口配置二进制，可用 kldcfg 工具修改',
+  '/NaviOne/NaviResFile/Phrase.txt': '继续行驶|直行|左转|右转|到达目的地',
+  '/NaviOne/NaviOne.cld':            '[模拟] 凯立德地图数据索引 (C系列 2010夏季版)',
+  '/NaviOne/UIRes/Menu.dat':         '[模拟] 菜单资源',
+  '/Setup/autorun.exe':              '[PE32 模拟] 车机自启动加载器',
+  '/Media/README.txt':               '此目录用于存放音乐/视频，SD 卡最大支持 32GB FAT32。',
+  '/Installed/README.txt':           '安装通道：通过 SD 卡管理拖入或“安装文件”按钮写入的软件存放在这里。'
+};
+let sd = { mounted:true, files:{} };
+
+function loadSD(){
+  try{
+    const raw = localStorage.getItem(SD_KEY);
+    if(raw){ sd = JSON.parse(raw); }
+    else { sd = {mounted:true, files:Object.assign({}, SEED)}; saveSD(); }
+  }catch(e){ sd = {mounted:true, files:Object.assign({}, SEED)}; }
+  if(!sd.files) sd.files = {};
+}
+function saveSD(){ try{ localStorage.setItem(SD_KEY, JSON.stringify(sd)); }catch(e){ clog('err','SD 持久化失败: '+e.message); } }
+function sdDirs(){
+  const set = new Set(['/']);
+  Object.keys(sd.files).forEach(p=>{
+    const parts = p.split('/').filter(Boolean);
+    let cur='';
+    parts.slice(0,-1).forEach(s=>{ cur += '/'+s; set.add(cur); });
+  });
+  return [...set].sort((a,b)=>a.length-b.length || a.localeCompare(b));
+}
+function sdSize(){ return Object.values(sd.files).reduce((n,c)=>n+(c?.length||0),0); }
+
+/* ---------------- 日志 ---------------- */
+const LOG = [];
+function ts(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`; }
+function clog(cls, msg){
+  const line = `[${ts()}] ${msg}`;
+  LOG.push({t:Date.now(), cls, msg:line});
+  const el = document.createElement('div');
+  el.innerHTML = `<span class="t">${ts()}</span> <span class="${cls}"></span>`;
+  el.querySelector('span:last-child').textContent = msg;
+  $('consoleLog').appendChild(el);
+  $('consoleLog').scrollTop = $('consoleLog').scrollHeight;
+}
+function toast(msg, ms=1400){
+  const t=$('toast'); t.textContent=msg; t.style.display='block';
+  clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none', ms);
+}
+
+/* ---------------- 页面路由 ---------------- */
+const PAGES = {boot:'bootPage', home:'launcher', nav:'navPage', sd:'sdPage', set:'setPage',
+               radio:'radioPage', dvd:'dvdPage', bt:'btPage'};
+let curPage = 'boot';
+function show(id){
+  Object.values(PAGES).forEach(p=>$(p).classList.remove('active'));
+  const key = Object.keys(PAGES).find(k=>PAGES[k]===id) || id;
+  curPage = key;
+  $(PAGES[key]||id).classList.add('active');
+}
+document.addEventListener('click', e=>{
+  const a = e.target.closest('[data-app]');
+  if(!a) return;
+  const app = a.dataset.app;
+  if(app==='home') show(PAGES.home);
+  else if(app==='reboot') boot();
+  else if(app==='console') toggleConsole(true);
+  else if(PAGES[app]) show(PAGES[app]);
+  if(app==='sd') renderTree();
+  if(app==='set') renderSet();
+});
+
+/* ---------------- 启动流程（WinCE 冷启动） ---------------- */
+const BOOT_LINES = [
+  ['Windows CE BootLoader 1.4.2 ...', 'ok'],
+  ['Detecting NAND flash: 128MB ... OK', 'ok'],
+  ['Loading EBOOT.BIN @ 0x80000000 ...', 'ok'],
+  ['Mounting FAT32 volume "SD_CARD" ...', 'ok'],
+  ['Loading kernel: kernl.img (CE 6.00) ...', 'ok'],
+  ['Init GPS UART: COM1 @ 4800bps ...', 'ok'],
+  ['Start shell: \\\\Windows\\\\explore.exe ...', 'ok'],
+  ['AutoRun: \\Setup\\autorun.exe -> launcher', 'ok']
+];
+function boot(){
+  show('boot');
+  $('bootLines').innerHTML='';
+  let i=0;
+  clearInterval(boot._t);
+  boot._t = setInterval(()=>{
+    if(i>=BOOT_LINES.length){
+      clearInterval(boot._t);
+      setTimeout(()=>{ show(PAGES.home); clog('ok','系统启动完成，进入主界面'); }, 500);
+      return;
+    }
+    const [txt, cls] = BOOT_LINES[i++];
+    const div = document.createElement('div');
+    div.innerHTML = `<span class="${cls}">✔</span> `;
+    div.appendChild(document.createTextNode(txt));
+    $('bootLines').appendChild(div);
+  }, 260);
+  clog('ok','— 冷启动 (Cold Boot) —');
+}
+
+/* ---------------- GPS / 凯立德导航引擎 ---------------- */
+// 世界坐标系：以启动点为原点的局部米坐标 (x 东, y 北)
+const ROUTE = [
+  {x:0,y:-400}, {x:0,y:0}, {x:300,y:0}, {x:300,y:600}, {x:700,y:600}
+];
+const POIS = [
+  {name:'中国石化 加油站', cat:'加油站', x:180, y:120},
+  {name:'万达广场 停车场', cat:'停车场', x:320, y:430},
+  {name:'人民公园', cat:'景点', x:-150, y:300},
+  {name:'市第一医院', cat:'医疗', x:520, y:160},
+  {name:'如家酒店 (火车站店)', cat:'酒店', x:640, y:540},
+  {name:'沃尔玛 超市', cat:'购物', x:-80, y:-260},
+  {name:'丰田 4S 服务中心', cat:'汽车服务', x:460, y:700}
+];
+const ROADS_H = [-600,-300,0,300,600,900];
+const ROADS_V = [-600,-300,0,300,600,900];
+const ORIGIN = {lat:39.9087, lon:116.3975}; // 北京示例坐标
+
+const gps = {
+  on:false, auto:true, x:0, y:-400, speed:11, // m/s ≈ 40km/h
+  heading:0, sats:0, fix:false, zoom:1, headingUp:false,
+  routeOn:false, routeDist:0, dest:null, arrived:false, segIdx:0, segT:0
+};
+let gpsCfg = {port:'COM1', baud:4800, on:1};
+
+function readNavConfig(){
+  const txt = sd.files['/NaviOne/naviconfig.txt'];
+  if(txt){
+    const p = txt.match(/Port\s*=\s*(\S+)/i), b = txt.match(/Baud\s*=\s*(\d+)/i), o = txt.match(/GPS_On\s*=\s*(\d+)/i);
+    if(p) gpsCfg.port = p[1];
+    if(b) gpsCfg.baud = parseInt(b[1]);
+    if(o) gpsCfg.on = parseInt(o[1]);
+  }else{ gpsCfg = {port:'COM1', baud:4800, on:1}; }
+  $('gpsPortTxt').textContent = `${gpsCfg.port} / ${gpsCfg.baud}bps`;
+  $('setPort').textContent = `${gpsCfg.port} / ${gpsCfg.baud} bps（读取 \\NaviOne\\naviconfig.txt）`;
+}
+
+function meters2latlon(x,y){
+  const dLat = y/111320;
+  const dLon = x/(111320*Math.cos(ORIGIN.lat*Math.PI/180));
+  return {lat:ORIGIN.lat+dLat, lon:ORIGIN.lon+dLon};
+}
+const pad=(n,w=2)=>String(n).padStart(w,'0');
+function nmeaChecksum(s){ let c=0; for(const ch of s) c^=ch.charCodeAt(0); return c.toString(16).toUpperCase().padStart(2,'0'); }
+function toNMEA(){
+  const {lat,lon} = meters2latlon(gps.x, gps.y);
+  const dm = (v,isLat)=>{
+    const d = Math.floor(Math.abs(v));
+    const m = ((Math.abs(v)-d)*60).toFixed(4);
+    const hemi = isLat ? (v>=0?'N':'S') : (v>=0?'E':'W');
+    return `${pad(d, isLat?2:3)}.${m.padStart(7,'0')}${hemi}`;
+  };
+  const d = new Date();
+  const utc = `${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}.00`;
+  const date = `${pad(d.getUTCDate())}${pad(d.getUTCMonth()+1)}${String(d.getUTCFullYear()).slice(2)}`;
+  const knots = (gps.speed*1.94384).toFixed(2);
+  const gga = `GPGGA,${utc},${dm(lat,true)},${dm(lon,false)},1,${gps.sats},1.2,${ORIGIN.lat.toFixed(1)},M,0.0,M,,`;
+  const rmc = `GPRMC,${utc},A,${dm(lat,true)},${dm(lon,false)},${knets},${(gps.heading).toFixed(2)},${date},,,A`;
+  return ['$'+gga+'*'+nmeaChecksum(gga), '$'+rmc+'*'+nmeaChecksum(rmc)];
+}
+
+function planRoute(dest){
+  gps.dest = dest; gps.routeOn = true; gps.arrived=false;
+  gps.segIdx = 0; gps.segT = 0;
+  $('arrived').style.display='none';
+  closeNavOverlay();
+  clog('ok', `路线规划完成：目的地「${dest.name}」，起点 (${gps.x.toFixed(0)},${gps.y.toFixed(0)})，全长 ${routeLen().toFixed(0)} m`);
+}
+function routeLen(){ let L=0; for(let i=1;i<ROUTE.length;i++) L+=Math.hypot(ROUTE[i].x-ROUTE[i-1].x, ROUTE[i].y-ROUTE[i-1].y); return L; }
+function remaining(){
+  let R = 0;
+  for(let i=gps.segIdx+1;i<ROUTE.length;i++) R += Math.hypot(ROUTE[i].x-ROUTE[i-1].x, ROUTE[i].y-ROUTE[i-1].y);
+  return R;
+}
+function gpsTick(){
+  if(!gps.on || !gps.auto || !gpsCfg.on) return;
+  const dt = 1;
+  if(gps.routeOn && gps.segIdx < ROUTE.length-1){
+    const a = ROUTE[gps.segIdx], b = ROUTE[gps.segIdx+1];
+    const segLen = Math.hypot(b.x-a.x, b.y-a.y);
+    gps.segT += gps.speed*dt;
+    if(gps.segT >= segLen){ gps.segT -= segLen; gps.segIdx++;
+      if(gps.segIdx >= ROUTE.length-1){
+        gps.arrived = true; gps.routeOn=false;
+        $('arrived').style.display='block';
+        setTimeout(()=>$('arrived').style.display='none', 2500);
+        clog('ok','到达目的地，导航结束');
+      }
+    }else{
+      const t = gps.segT/segLen;
+      gps.x = a.x+(b.x-a.x)*t; gps.y = a.y+(b.y-a.y)*t;
+      gps.heading = (Math.atan2(b.x-a.x, b.y-a.y)*180/Math.PI+360)%360;
+    }
+  }
+  gps.sats = gpsCfg.on ? Math.min(11, 6+Math.floor(Math.random()*5)) : 0;
+  gps.fix = gps.sats >= 4;
+}
+setInterval(()=>{
+  gpsTick();
+  if(gps.on && gpsCfg.on && $('navPage').classList.contains('active')){
+    toNMEA().forEach(s=>clog('nmea', s));
+  }
+  drawMap();
+  updateNavHud();
+}, 1000);
+
+/* ---------------- 地图绘制 ---------------- */
+function scaleOf(){ return [0.15,0.25,0.45,0.8][gps.zoom]; }
+function drawMap(){
+  const cv=$('navCanvas'); if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const W=RES.w, H=RES.h, S=scaleOf();
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#e6e0cd'; ctx.fillRect(0,0,W,H); // 底图
+  // 水域/绿地装饰
+  ctx.fillStyle='#bcd9ee'; ctx.fillRect(0, 40*S+H/2, W, 60*S); // 一条河
+  ctx.fillStyle='#cfe3b8';
+  ctx.fillRect((-260)*S+W/2, (-100)*S+H/2, 200*S, 160*S); // 公园
+
+  const rot = gps.headingUp ? -gps.heading*Math.PI/180 : 0;
+  const cx=W/2, cy=H/2;
+  const P = (wx,wy)=>{
+    const dx=(wx-gps.x)*S, dy=-(wy-gps.y)*S;
+    return [cx + dx*Math.cos(rot)-dy*Math.sin(rot), cy + dx*Math.sin(rot)+dy*Math.cos(rot)];
+  };
+  // 道路
+  ctx.strokeStyle='#ffffff'; ctx.lineCap='round';
+  ROADS_H.forEach(y=>{ const [x1,y1]=P(-1000,y), [x2,y2]=P(1000,y);
+    ctx.lineWidth=Math.max(3, 18*S); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.strokeStyle='#e0c76a'; ctx.lineWidth=Math.max(1, 1.2*S);
+    ctx.setLineDash([8,8]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.setLineDash([]); ctx.strokeStyle='#ffffff'; });
+  ROADS_V.forEach(x=>{ const [x1,y1]=P(x,-1000), [x2,y2]=P(x,1000);
+    ctx.lineWidth=Math.max(3, 18*S); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.strokeStyle='#e0c76a'; ctx.lineWidth=Math.max(1, 1.2*S);
+    ctx.setLineDash([8,8]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.setLineDash([]); ctx.strokeStyle='#ffffff'; });
+  // 路名
+  ctx.fillStyle='#7a7361'; ctx.font='11px Microsoft YaHei'; ctx.textAlign='center';
+  ctx.fillText('北 京 大 街', W/2-40*S+160, P(0,300)[1]-8);
+  ctx.fillText('长 安 路', P(300,0)[0]+40, H/2-8);
+  // 路线
+  if(gps.routeOn || gps.arrived){
+    ctx.strokeStyle='#0aa2e8'; ctx.lineWidth=Math.max(5,10*S); ctx.lineJoin='round';
+    ctx.beginPath();
+    ROUTE.forEach((p,i)=>{ const [sx,sy]=P(p.x,p.y); i?ctx.lineTo(sx,sy):ctx.moveTo(sx,sy); });
+    ctx.stroke();
+    ctx.strokeStyle='#8ee0ff'; ctx.lineWidth=Math.max(1.5,3*S); ctx.stroke();
+    const d=ROUTE[ROUTE.length-1]; const [dx,dy]=P(d.x,d.y);
+    ctx.fillStyle='#e33'; ctx.font='16px sans-serif'; ctx.fillText('🚩',dx,dy);
+  }
+  // POI
+  ctx.textAlign='center';
+  POIS.forEach(p=>{
+    const [sx,sy]=P(p.x,p.y);
+    if(sx<-40||sx>W+40||sy<-20||sy>H+20) return;
+    ctx.fillStyle='#0a63b8'; ctx.beginPath(); ctx.arc(sx,sy,4,0,7); ctx.fill();
+    ctx.fillStyle='#333'; ctx.font='11px Microsoft YaHei'; ctx.fillText(p.name, sx, sy-8);
+  });
+  // 车辆
+  ctx.save(); ctx.translate(cx,cy);
+  const carRot = gps.headingUp ? 0 : gps.heading*Math.PI/180;
+  ctx.rotate(carRot);
+  ctx.fillStyle='#0a63b8'; ctx.strokeStyle='#fff'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(0,-16); ctx.lineTo(11,13); ctx.lineTo(0,8); ctx.lineTo(-11,13); ctx.closePath();
+  ctx.fill(); ctx.stroke(); ctx.restore();
+  // 指北针
+  if(gps.headingUp){
+    ctx.save(); ctx.translate(W-40, 60); ctx.rotate(-gps.heading*Math.PI/180);
+    ctx.fillStyle='#c0392b'; ctx.beginPath(); ctx.moveTo(0,-16); ctx.lineTo(6,4); ctx.lineTo(-6,4); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#333'; ctx.fillText('N',0,-22); ctx.restore();
+  }
+  // 未定位提示
+  if(!gps.fix){
+    ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(W/2-150, H/2-70, 300, 34);
+    ctx.fillStyle='#ffd34d'; ctx.font='15px Microsoft YaHei'; ctx.fillText('GPS 未定位 · 搜索卫星中…', W/2, H/2-48);
+  }
+}
+
+function maneuverFor(){
+  if(!gps.routeOn) return {ico:'⬆️', txt:'未规划路线', sub:'请点击「菜单 → 目的地」设置目的地'};
+  if(gps.segIdx>=ROUTE.length-1) return {ico:'🏁', txt:'到达目的地', sub:''};
+  const a=ROUTE[gps.segIdx], b=ROUTE[gps.segIdx+1], c=ROUTE[gps.segIdx+2];
+  const dist=Math.hypot(b.x-a.x,b.y-a.y)-gps.segT;
+  if(!c) return {ico:'🏁', txt:'到达目的地', sub:`${Math.max(0,dist).toFixed(0)} m`};
+  const a1=Math.atan2(b.x-a.x,b.y-a.y), a2=Math.atan2(c.x-b.x,c.y-b.y);
+  let da=(a2-a1)*180/Math.PI; while(da>180)da-=360; while(da<-180)da+=360;
+  const ico = Math.abs(da)<30?'⬆️':(da>0?'⬅️':'➡️');
+  const txt = Math.abs(da)<30?'直行':(da>0?'左转':'右转');
+  return {ico, txt, sub:`${Math.max(0,dist).toFixed(0)} m 后 ${txt}`};
+}
+function updateNavHud(){
+  $('satCount').textContent = gps.sats;
+  $('sigBars').classList.toggle('off', !gps.fix);
+  const kmh = (gps.speed*3.6).toFixed(0);
+  $('spd').textContent = `${gps.routeOn||gps.arrived?kmh:0} km/h`;
+  const m = maneuverFor();
+  $('mIco').textContent=m.ico; $('mTxt').textContent=m.txt; $('mSub').textContent=m.sub;
+  const R = gps.routeOn ? remaining() : 0;
+  $('restDist').textContent = gps.routeOn ? (R>=1000?(R/1000).toFixed(1)+' km':R.toFixed(0)+' m') : '--';
+  $('restTime').textContent = gps.routeOn ? Math.max(1,Math.ceil(R/gps.speed/60))+' 分钟' : '--';
+}
+
+/* ---------------- 导航菜单/查找覆盖层 ---------------- */
+function navOverlay(html){
+  const o=$('navOverlay'); o.innerHTML=html; o.classList.add('active');
+  o.querySelectorAll('[data-np]').forEach(el=>el.addEventListener('click',()=>navAction(el.dataset.np, el.dataset.arg)));
+}
+function closeNavOverlay(){ $('navOverlay').classList.remove('active'); $('navOverlay').innerHTML=''; }
+function navAction(a, arg){
+  if(a==='close') return closeNavOverlay();
+  if(a==='home') return navOverlay(`
+    <div class="navPanel"><span class="npClose" data-np="close">✕</span>
+      <h3>凯立德导航 · 主菜单</h3>
+      <div class="npRow">
+        <button class="npBtn" data-np="dest">🎯 目的地</button>
+        <button class="npBtn" data-np="find">🔍 地名查找</button>
+        <button class="npBtn" data-np="cancel">✖ 取消路线</button>
+        <button class="npBtn" data-np="cfg">⚙ GPS 端口设置</button>
+        <button class="npBtn" data-np="close">↩ 返回地图</button>
+      </div>
+      <div style="font-size:12px; color:#9fd0ff; line-height:1.8;">
+        地图版本：C 系列 2010 夏季版（模拟） · 数据路径：SD:\NaviOne\<br>
+        端口配置：${gpsCfg.port} / ${gpsCfg.baud} bps（naviconfig.txt） · GPS ${gpsCfg.on?'启用':'禁用'}
+      </div>
+    </div>`);
+  if(a==='dest'||a==='find'){
+    navOverlay(`
+      <div class="navPanel"><span class="npClose" data-np="close">✕</span>
+        <h3>目的地查找</h3>
+        <input class="npInput" id="poiKw" placeholder="输入关键字，如：加油站 / 医院 / 酒店" value="">
+        <div class="npRow">
+          ${['加油站','停车场','医院','酒店','超市','景点'].map(c=>`<button class="npBtn" data-np="cat" data-arg="${c}">${c}</button>`).join('')}
+        </div>
+        <ul class="npList" id="poiList"></ul>
+      </div>`);
+    const fill=(kw)=>{
+      const list=$('poiList'); list.innerHTML='';
+      POIS.filter(p=>!kw||p.name.includes(kw)||p.cat.includes(kw)).forEach(p=>{
+        const d=Math.hypot(p.x-gps.x,p.y-gps.y);
+        const li=document.createElement('li');
+        li.innerHTML=`<span>${p.name} <small>[${p.cat}]</small></span><small>${(d/1000).toFixed(1)} km · 设为目的地</small>`;
+        li.addEventListener('click',()=>planRoute(p));
+        list.appendChild(li);
+      });
+      if(!list.children.length) list.innerHTML='<li style="cursor:default">未找到结果，尝试其他关键字</li>';
+    };
+    fill('');
+    $('poiKw').addEventListener('input',e=>fill(e.target.value.trim()));
+    return;
+  }
+  if(a==='cat'){ const inp=$('poiKw'); if(inp){ inp.value=arg; inp.dispatchEvent(new Event('input')); } return; }
+  if(a==='cancel'){ gps.routeOn=false; gps.dest=null; closeNavOverlay(); clog('warn','已取消当前路线'); return; }
+  if(a==='cfg'){
+    navOverlay(`
+      <div class="navPanel"><span class="npClose" data-np="close">✕</span>
+        <h3>GPS 端口设置（写入 \NaviOne\naviconfig.txt）</h3>
+        <div class="npRow">${['COM1','COM2','COM7','COM8'].map(p=>`<button class="npBtn" data-np="port" data-arg="${p}">${p}${p===gpsCfg.port?' ✓':''}</button>`).join('')}</div>
+        <div class="npRow">${[4800,9600,38400,115200].map(b=>`<button class="npBtn" data-np="baud" data-arg="${b}">${b}${b===gpsCfg.baud?' ✓':''}</button>`).join('')}</div>
+        <div class="npRow">
+          <button class="npBtn" data-np="gpstoggle">GPS ${gpsCfg.on?'禁用':'启用'}</button>
+          <button class="npBtn" data-np="nmea1">发送一条 NMEA 到日志</button>
+        </div>
+      </div>`);
+    return;
+  }
+  if(a==='port'||a==='baud'){
+    const cur = sd.files['/NaviOne/naviconfig.txt'] || '[GPS]\nPort=COM1\nBaud=4800\nGPS_On=1\nFilter=0\n';
+    const nv = a==='port' ? cur.replace(/Port\s*=\s*\S+/i,'Port='+arg) : cur.replace(/Baud\s*=\s*\d+/i,'Baud='+arg);
+    sd.files['/NaviOne/naviconfig.txt']=nv; saveSD(); readNavConfig();
+    clog('ok', `naviconfig.txt 已更新 -> ${gpsCfg.port} / ${gpsCfg.baud}`);
+    navAction('cfg'); return;
+  }
+  if(a==='gpstoggle'){
+    const cur = sd.files['/NaviOne/naviconfig.txt'] || '';
+    sd.files['/NaviOne/naviconfig.txt']=cur.replace(/GPS_On\s*=\s*\d/i,'GPS_On='+(gpsCfg.on?0:1));
+    saveSD(); readNavConfig(); navAction('cfg');
+    clog(gpsCfg.on?'ok':'warn', `GPS 已${gpsCfg.on?'启用':'禁用'}`); return;
+  }
+  if(a==='nmea1'){ toNMEA().forEach(s=>clog('nmea',s)); return; }
+}
+document.querySelectorAll('#navBtns .navbtn').forEach(b=>b.addEventListener('click',()=>{
+  const nb=b.dataset.nb;
+  if(nb==='menu') navAction('home');
+  else if(nb==='find') navAction('find');
+  else if(nb==='zin'){ gps.zoom=Math.min(3,gps.zoom+1); drawMap(); }
+  else if(nb==='zout'){ gps.zoom=Math.max(0,gps.zoom-1); drawMap(); }
+  else if(nb==='view'){ gps.headingUp=!gps.headingUp; drawMap(); clog('ok','视角切换: '+(gps.headingUp?'车头朝上':'正北朝上')); }
+  else if(nb==='exit'){ closeNavOverlay(); show(PAGES.home); clog('ok','退出导航，返回主界面'); }
+}));
+
+/* ---------------- SD 卡管理界面 ---------------- */
+let selPath = null;
+function renderTree(){
+  const tree=$('sdTree'); tree.innerHTML='';
+  $('sdStateTxt').textContent = sd.mounted ? '已挂载 · FAT32 · '+Object.keys(sd.files).length+' 个文件' : '未插入';
+  if(!sd.mounted){ tree.innerHTML='<div style="color:#9fd0ff; padding:10px">SD 卡未插入，点击下方「弹出/插入」恢复。</div>'; $('sdPreview').textContent='—'; return; }
+  sdDirs().forEach(dir=>{
+    const depth=(dir.split('/').filter(Boolean).length);
+    const el=document.createElement('div');
+    el.className='tnode tdir';
+    el.style.paddingLeft=(6+depth*14)+'px';
+    el.textContent='📁 '+ (dir==='/'?'SD 根目录':dir.split('/').pop());
+    el.addEventListener('click',()=>{ el._open=!el._open; el.textContent=(el._open?'📂 ':'📁 ')+(dir==='/'?'SD 根目录':dir.split('/').pop()); renderChildren(); });
+    tree.appendChild(el);
+    const kids=document.createElement('div'); kids.dataset.for=dir; tree.appendChild(kids);
+    function renderChildren(){ /* 简化：整体重绘 */ renderTree2(); }
+  });
+  // 文件节点
+  Object.keys(sd.files).sort().forEach(path=>{
+    const dir='/'+path.split('/').filter(Boolean).slice(0,-1).join('/');
+    const holder=tree.querySelector(`div[data-for="${CSS.escape(dir)}"]`);
+    if(!holder) return;
+    const el=document.createElement('div');
+    el.className='tnode tfile'+(selPath===path?' sel':'');
+    el.style.paddingLeft=(20+(dir.split('/').filter(Boolean).length)*14)+'px';
+    el.textContent='📄 '+path.split('/').pop();
+    el.title=path;
+    el.addEventListener('click',()=>{ selPath=path; renderTree(); showFile(path); });
+    holder.appendChild(el);
+  });
+}
+function renderTree2(){ renderTree(); }
+function showFile(path){
+  const c = sd.files[path] ?? '';
+  $('sdPreview').textContent = c.startsWith('data:') ? `[二进制文件] ${path}\n大小: ${c.length} 字节（Base64 存储，导出可还原原始文件）` : c;
+  $('sdPreview').dataset.path = path;
+}
+$('btnInstall').addEventListener('click',()=>$('fileInput').click());
+$('fileInput').addEventListener('change',e=>{ installFiles([...e.target.files]); e.target.value=''; });
+function installFiles(files){
+  if(!sd.mounted){ toast('SD 卡未插入'); return; }
+  files.forEach(f=>{
+    const path='/Installed/'+f.name;
+    if(f.size > 2*1024*1024){ clog('warn', `跳过 ${f.name}（超过模拟器 2MB 单文件上限）`); return; }
+    const r=new FileReader();
+    r.onload=()=>{
+      const isText = typeof r.result==='string' && !r.result.startsWith('data:');
+      sd.files[path] = isText ? r.result : r.result; // 文本原样 / 二进制 base64(dataURL)
+      saveSD(); renderTree(); selPath=path; showFile(path);
+      clog('ok', `已安装到 SD: ${path} (${f.size} B)`);
+      toast('安装完成: '+f.name);
+    };
+    if(/\.(txt|ini|cfg|xml|json|log|csv|md|html|js|css)$/i.test(f.name) || f.type.startsWith('text/')) r.readAsText(f);
+    else r.readAsDataURL(f);
+  });
+}
+const drop=$('sdDrop');
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault(); drop.classList.add('hot');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault(); drop.classList.remove('hot');}));
+drop.addEventListener('drop',e=>{ if(e.dataTransfer.files.length) installFiles([...e.dataTransfer.files]); });
+document.addEventListener('dragover',e=>e.preventDefault());
+document.addEventListener('drop',e=>e.preventDefault());
+
+$('btnNewFile').addEventListener('click',()=>{
+  const name=prompt('新文件名（将创建在 /Installed/ 下）','test-note.txt');
+  if(!name) return;
+  sd.files['/Installed/'+name]='# 新建测试文件\n'+new Date().toISOString()+'\n';
+  saveSD(); selPath='/Installed/'+name; renderTree(); showFile(selPath);
+});
+$('btnSaveEdit').addEventListener('click',()=>{
+  const p=$('sdPreview').dataset.path;
+  if(!p){ toast('请先选择文件'); return; }
+  if((sd.files[p]||'').startsWith('data:')){ toast('二进制文件不可编辑'); return; }
+  sd.files[p]=$('sdPreview').textContent; saveSD();
+  clog('ok','已保存: '+p); toast('已保存');
+  if(p==='/NaviOne/naviconfig.txt'){ readNavConfig(); }
+});
+$('btnDown').addEventListener('click',()=>{
+  const p=$('sdPreview').dataset.path || selPath;
+  if(!p){ toast('请先选择文件'); return; }
+  const c=sd.files[p];
+  const blob = c.startsWith('data:')
+    ? (function(){ const [h,b]=c.split(','); const bin=atob(b); const arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i); return new Blob([arr],{type:h.match(/:(.*?);/)[1]}); })()
+    : new Blob([c],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=p.split('/').pop(); a.click();
+  clog('ok','导出: '+p);
+});
+$('btnDel').addEventListener('click',()=>{
+  const p=$('sdPreview').dataset.path || selPath;
+  if(!p){ toast('请先选择文件'); return; }
+  if(!confirm('删除 '+p+' ?')) return;
+  delete sd.files[p]; saveSD(); selPath=null; renderTree(); $('sdPreview').textContent='已删除';
+  clog('warn','已删除: '+p);
+});
+$('btnFormat').addEventListener('click',()=>{
+  if(!confirm('格式化将清空全部虚拟 SD 卡数据（含安装的软件），继续？')) return;
+  sd.files={}; saveSD(); selPath=null; renderTree(); $('sdPreview').textContent='SD 卡已格式化（空）';
+  clog('warn','SD 卡已格式化');
+});
+$('btnEject').addEventListener('click',toggleSd);
+function toggleSd(){
+  sd.mounted=!sd.mounted; saveSD();
+  $('sdSlot').classList.toggle('out',!sd.mounted);
+  $('sdSlotTxt').textContent = sd.mounted?'SD CARD':'NO CARD';
+  $('sdInfo').textContent = sd.mounted?'SD 卡：已插入 · NaviOne 地图已就绪':'SD 卡：未插入 · 导航不可用';
+  clog(sd.mounted?'ok':'warn', sd.mounted?'SD 卡已插入，挂载 FAT32':'SD 卡已弹出');
+  renderTree();
+}
+$('sdSlot').addEventListener('click',toggleSd);
+
+/* ---------------- 收音机 ---------------- */
+let radioFreq=101.7, radioBand='FM1';
+const PRESETS={FM1:[87.5,90.2,94.0,97.4,101.7],FM2:[103.9,105.7,106.6,108.0,96.6],AM:[540,720,900,1080,1400]};
+function renderRadio(){
+  $('radioFreq').innerHTML=radioFreq.toFixed(1)+'<small> '+(radioBand==='AM'?'kHz':'MHz')+'</small>';
+  $('radioMode').textContent=radioBand+' · 立体声';
+  const box=$('radioPresets'); box.innerHTML='';
+  PRESETS[radioBand].forEach((f,i)=>{
+    const d=document.createElement('div'); d.className='preset';
+    d.innerHTML=`${f}<small>P${i+1}</small>`;
+    d.addEventListener('click',()=>{radioFreq=f; renderRadio(); clog('ok','收音机调谐到 '+f);});
+    box.appendChild(d);
+  });
+}
+$('radioPrev').addEventListener('click',()=>{radioFreq=Math.max(radioBand==='AM'?530:87.5, +(radioFreq-(radioBand==='AM'?10:0.1)).toFixed(1)); renderRadio();});
+$('radioNext').addEventListener('click',()=>{radioFreq=Math.min(radioBand==='AM'?1620:108.0, +(radioFreq+(radioBand==='AM'?10:0.1)).toFixed(1)); renderRadio();});
+document.querySelectorAll('[data-band]').forEach(b=>b.addEventListener('click',()=>{radioBand=b.dataset.band; renderRadio();}));
+
+/* ---------------- 设置页 ---------------- */
+function renderSet(){
+  readNavConfig();
+  $('setSd').textContent = (sd.mounted?'已插入':'未插入')+' · 文件 '+Object.keys(sd.files).length+' 个 · '+sdSize()+' 字节';
+  $('setMap').textContent = sd.mounted && sd.files['/NaviOne/NaviOne.exe'] ? 'SD:\\NaviOne\\ 正常' : 'SD:\\NaviOne\\ 缺失（导航将无法启动）';
+  if(!$('setSerial').textContent || $('setSerial').textContent==='—')
+    $('setSerial').textContent = Array.from({length:16},()=>'0123456789ABCDEF'[Math.floor(Math.random()*16)]).join('');
+}
+
+/* ---------------- 测试控制台（测试通道） ---------------- */
+let consoleOpen=false;
+function toggleConsole(force){
+  consoleOpen = force!==undefined ? force : !consoleOpen;
+  $('console').classList.toggle('active', consoleOpen);
+  if(consoleOpen) setTimeout(()=>$('consoleInput').focus(),50);
+}
+$('consoleX').addEventListener('click',()=>toggleConsole(false));
+$('btnTest').addEventListener('click',()=>toggleConsole());
+document.addEventListener('keydown',e=>{
+  if(e.key==='F12'){ e.preventDefault(); toggleConsole(); }
+  if(e.key==='Escape'){ closeNavOverlay(); toggleConsole(false); }
+  if(consoleOpen && e.target!==$('consoleInput') && e.key.length===1){ $('consoleInput').focus(); }
+});
+$('consoleInput').addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const cmd=e.target.value.trim(); e.target.value='';
+  if(!cmd) return;
+  clog('in','> '+cmd);
+  runCmd(cmd);
+});
+
+function runCmd(cmd){
+  const [c, ...args] = cmd.split(/\s+/);
+  const rest = cmd.slice(c.length).trim();
+  switch(c.toLowerCase()){
+    case 'help':
+      clog('ok', [
+        'help                          帮助',
+        'dir [路径]                    列出 SD 目录',
+        'cat <路径>                    查看文件',
+        'write <路径> <内容>           写入文件（自动保存）',
+        'del <路径>                    删除文件',
+        'install                       打开文件安装对话框',
+        'mount / eject                 插入/弹出 SD 卡',
+        'format                        格式化虚拟 SD',
+        'gps on|off|speed <m/s>        GPS 模拟器开关/调速',
+        'gps fix <lat,lon>             定位到指定坐标',
+        'nmea <语句>                   注入原始 NMEA 语句（校验和自动补全）',
+        'port <COMx> <baud>            写入 naviconfig.txt 端口配置',
+        'run <路径>                    运行 SD 上的 exe',
+        'route <POI序号|名称>          规划路线',
+        'log export                    导出测试日志 (json)',
+        'clear                         清屏',
+        'reboot / home / nav           系统控制'
+      ].join('\n'));
+      break;
+    case 'dir': {
+      const base = (args[0]||'/').replace(/\/+$/,'') || '/';
+      const files = Object.keys(sd.files).filter(p=>p.startsWith(base==='/'?'/':base+'/'));
+      if(!files.length) clog('warn',`目录 ${base} 为空或不存在`);
+      else files.sort().forEach(p=>{
+        const size=(sd.files[p]||'').length;
+        clog('ok', `${p.padEnd(46)} ${String(size).padStart(8)} B`);
+      });
+      clog('ok', `— ${files.length} 个文件 · SD ${sd.mounted?'已挂载':'未插入'} · 共 ${sdSize()} B`);
+      break; }
+    case 'cat': {
+      if(!args[0]) return clog('err','用法: cat <路径>');
+      const p = normPath(args[0]);
+      if(!(p in sd.files)) return clog('err','文件不存在: '+p);
+      clog('ok', '--- '+p+' ---');
+      String(sd.files[p]).split('\n').slice(0,60).forEach(l=>clog('ok',l));
+      break; }
+    case 'write': {
+      if(args.length<2) return clog('err','用法: write <路径> <内容>');
+      const p=normPath(args[0]); sd.files[p]=rest.slice(rest.indexOf(args[1])); saveSD();
+      if(p==='/NaviOne/naviconfig.txt') readNavConfig();
+      clog('ok','已写入 '+p+' ('+sd.files[p].length+' B)');
+      if(curPage==='sd') renderTree();
+      break; }
+    case 'del': {
+      if(!args[0]) return clog('err','用法: del <路径>');
+      const p=normPath(args[0]);
+      if(!(p in sd.files)) return clog('err','文件不存在: '+p);
+      delete sd.files[p]; saveSD(); if(curPage==='sd') renderTree();
+      clog('warn','已删除 '+p);
+      break; }
+    case 'install': toggleConsole(false); show(PAGES.sd); $('fileInput').click(); break;
+    case 'mount': if(!sd.mounted) toggleSd(); else clog('ok','SD 卡已在位'); break;
+    case 'eject': if(sd.mounted) toggleSd(); else clog('warn','SD 卡已弹出'); break;
+    case 'format': sd.files={}; saveSD(); clog('warn','SD 卡已格式化'); if(curPage==='sd') renderTree(); break;
+    case 'gps': {
+      const sub=(args[0]||'').toLowerCase();
+      if(sub==='on'){ gps.on=true; gps.auto=true; clog('ok','GPS 模拟器已开启'); }
+      else if(sub==='off'){ gps.on=false; gps.sats=0; gps.fix=false; clog('warn','GPS 模拟器已关闭'); }
+      else if(sub==='speed'){ gps.speed=parseFloat(args[1])||11; clog('ok','车速 = '+(gps.speed*3.6).toFixed(0)+' km/h'); }
+      else if(sub==='fix' && args[1]){
+        const [la,lo]=args[1].split(',').map(parseFloat);
+        if(isNaN(la)||isNaN(lo)) return clog('err','坐标格式: lat,lon');
+        ORIGIN.lat=la; ORIGIN.lon=lo;
+        gps.x=0; gps.y=-400; gps.routeOn=false;
+        clog('ok',`定位基准已设置: ${la}, ${lo}`);
+        toNMEA().forEach(s=>clog('nmea',s));
+      }
+      else clog('err','用法: gps on|off|speed <m/s>|fix <lat,lon>');
+      break; }
+    case 'nmea': {
+      if(!args[0]) return clog('err','用法: nmea $GPGGA,...');
+      let s = rest.startsWith('$')?rest:'$'+rest;
+      if(!s.includes('*')) s = s+'*'+nmeaChecksum(s.slice(1));
+      gps.on=true;
+      clog('nmea','[注入] '+s);
+      clog('ok','NMEA 语句已注入 GPS 管道（导航模拟器已消费）');
+      break; }
+    case 'port': {
+      if(args.length<2) return clog('err','用法: port COMx <baud>');
+      const cur = sd.files['/NaviOne/naviconfig.txt'] || '[GPS]\nPort=COM1\nBaud=4800\nGPS_On=1\n';
+      let nv = cur.replace(/Port\s*=\s*\S+/i,'Port='+args[0].toUpperCase());
+      nv = nv.replace(/Baud\s*=\s*\d+/i,'Baud='+args[1]);
+      sd.files['/NaviOne/naviconfig.txt']=nv; saveSD(); readNavConfig();
+      clog('ok',`端口配置已更新: ${gpsCfg.port} / ${gpsCfg.baud}`);
+      break; }
+    case 'run': {
+      if(!args[0]) return clog('err','用法: run <路径>');
+      const p=normPath(args[0]);
+      if(!(p in sd.files)) return clog('err','文件不存在: '+p);
+      launchExe(p);
+      break; }
+    case 'route': {
+      const q=rest;
+      const p = POIS.find((p,i)=>String(i)===q) || POIS.find(p=>p.name.includes(q));
+      if(!p) return clog('err','未找到 POI，可用地名关键字，如: route 加油站');
+      show(PAGES.nav); gps.on=true; planRoute(p);
+      break; }
+    case 'log':
+      if((args[0]||'').toLowerCase()==='export') exportLog();
+      else clog('ok', LOG.slice(-15).map(l=>l.msg).join('\n'));
+      break;
+    case 'clear': $('consoleLog').innerHTML=''; break;
+    case 'reboot': boot(); break;
+    case 'home': show(PAGES.home); break;
+    case 'nav': show(PAGES.nav); gps.on=true; break;
+    case 'sysinfo':
+      clog('ok', `Windows Embedded CE 6.0 | 800x480 | KLD C系列(模拟) | SD ${sd.mounted?'MOUNTED':'EJECTED'} | files=${Object.keys(sd.files).length} | GPS ${gpsCfg.port}/${gpsCfg.baud} on=${gpsCfg.on}`);
+      break;
+    default: clog('err','未知命令: '+c+' （输入 help 查看帮助）');
+  }
+}
+function normPath(p){ p=p.replace(/\\/g,'/'); if(!p.startsWith('/')) p='/'+p; return p; }
+
+function launchExe(path){
+  clog('ok','CreateProcess: '+path);
+  if(/NaviOne\.exe$/i.test(path)){
+    if(!sd.mounted){ clog('err','SD 卡未插入，导航无法启动'); return; }
+    if(!sd.files['/NaviOne/NaviOne.exe']){ clog('err','\\NaviOne\\NaviOne.exe 缺失'); return; }
+    readNavConfig(); gps.on=true; show(PAGES.nav);
+    clog('ok','导航已启动 · 地图数据 SD:\\NaviOne\\');
+    navAction('home');
+    return;
+  }
+  $('exeWinTitle').textContent = path.split('/').pop();
+  $('exeWinBody').textContent =
+    `[模拟运行] ${path}\n`+
+    `架构: ARM (WinCE 6.0 PE)   大小: ${(sd.files[path]||'').length} B\n`+
+    `加载: OK · 初始化: OK · 进入消息循环…\n\n`+
+    `这是占位执行环境，用于验证 SD 安装通道与启动链路。\n`+
+    `可在控制台用 run <路径> 再次启动，用 dir 查看已装文件。`;
+  $('exeWin').classList.add('active');
+}
+$('exeWinX').addEventListener('click',()=>$('exeWin').classList.remove('active'));
+
+function exportLog(){
+  const blob=new Blob([JSON.stringify(LOG,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='kld-sim-testlog-'+Date.now()+'.json'; a.click();
+  clog('ok','日志已导出 ('+LOG.length+' 条)');
+}
+
+/* ---------------- 实体按键 ---------------- */
+$('btnPower').addEventListener('click',()=>{ boot(); });
+$('btnNav').addEventListener('click',()=>{ show(PAGES.nav); gps.on=true; clog('ok','NAV 键 -> 启动导航'); });
+$('btnMenu').addEventListener('click',()=>{ show(PAGES.home); });
+$('btnEjectHw').addEventListener('click',toggleSd);
+let vol=18;
+$('volKnob').addEventListener('click',()=>{ vol=(vol+6)%40; toast('音量 '+vol); clog('ok','VOL = '+vol); });
+
+/* ---------------- 时钟 ---------------- */
+setInterval(()=>{
+  const d=new Date(), p=n=>String(n).padStart(2,'0');
+  const s=`${p(d.getHours())}:${p(d.getMinutes())}`;
+  $('clk').textContent=s; $('clk2').textContent=s;
+},1000);
+
+/* ---------------- 对外测试 API ---------------- */
+window.kld = {
+  sd,                      // 虚拟 SD 卡（写操作请调用各方法）
+  files:()=>Object.keys(sd.files),
+  read:p=>sd.files[normPath(p)],
+  write:(p,c)=>{ sd.files[normPath(p)]=c; saveSD(); clog('ok','API write: '+normPath(p)); },
+  del:p=>{ delete sd.files[normPath(p)]; saveSD(); },
+  run:launchExe,
+  cmd:runCmd,
+  gps,
+  nmea:()=>toNMEA(),
+  log:()=>LOG.slice(),
+  exportLog,
+  gpsCfg:()=>gpsCfg
+};
+
+/* ---------------- 初始化 ---------------- */
+loadSD();
+readNavConfig();
+renderRadio();
+renderTree();
+drawMap();
+clog('ok','测试通道就绪 · SD 文件数='+Object.keys(sd.files).length+' · 控制台按 F12 打开');
+clog('ok','API: window.kld.{cmd,read,write,run,nmea,gps,exportLog}');
+boot();
+</script>
+</body>
+</html>
