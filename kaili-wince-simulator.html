@@ -234,6 +234,95 @@
     -webkit-user-select:text; user-select:text;}
   .toast{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,.85);
     color:#fff; padding:12px 22px; border-radius:8px; font-size:15px; z-index:70; display:none; border:1px solid #333;}
+
+  /* ===== v0.2 系统层功能 ===== */
+  .licon{height:100px;}
+  #iconGrid{padding:14px 30px; gap:12px;}
+  .licon .ico{font-size:30px;}
+  #radioPresets{grid-template-columns:repeat(6,1fr); width:660px;}
+  #rdsRow{display:flex; gap:20px; font-size:14px; color:#5fd0ff; margin:4px 0 12px;
+    font-family:Consolas,monospace; height:20px;}
+  #rdsRow .pty{color:#8b949e;}
+
+  /* ---- 蓝牙 ---- */
+  #btTabs{display:flex; gap:8px; margin-bottom:10px;}
+  .btTab{padding:7px 18px; border-radius:6px; background:rgba(255,255,255,.08); cursor:pointer;
+    border:1px solid rgba(255,255,255,.2); font-size:13px;}
+  .btTab.on{background:#1287e0; border-color:#0a5fae;}
+  #btStatus{font-size:12.5px; color:#9fd0ff; margin-bottom:10px;}
+  #btContent{padding:0 24px 16px; font-size:13px;}
+  .btGrid{display:grid; grid-template-columns:repeat(4,88px); gap:8px;}
+  .btKey{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); border-radius:8px;
+    padding:11px 0; text-align:center; font-size:19px; cursor:pointer; color:#fff;}
+  .btKey:active{background:#1287e0;}
+  .btCols{display:flex; gap:22px; align-items:flex-start;}
+  .btList{list-style:none; width:250px; max-height:240px; overflow:auto;}
+  .btList li{padding:7px 10px; border-bottom:1px dashed rgba(255,255,255,.18); cursor:pointer;
+    display:flex; justify-content:space-between; font-size:12.5px;}
+  .btList li:hover{background:rgba(18,135,224,.35);}
+  .btList li small{color:#9fd0ff;}
+  #dialNum{font-family:Consolas; font-size:26px; background:#04243f; border:1px solid #1287e0;
+    border-radius:8px; padding:6px 14px; min-width:280px; display:inline-block; min-height:40px;
+    letter-spacing:2px; margin-bottom:10px; color:#ffd34d;}
+  .btCallBox{background:rgba(0,0,0,.35); border:1px solid #1287e0; border-radius:8px; padding:14px;
+    width:280px; text-align:center;}
+
+  /* ---- 行车电脑 / CAN ---- */
+  #canWrap{display:flex; gap:18px; padding:12px 20px 0;}
+  #canLeft{width:330px;}
+  #gearRow{display:flex; gap:8px; margin:8px 0 10px;}
+  .gearBtn{width:56px; height:42px; border-radius:8px; border:1px solid #04355f;
+    background:linear-gradient(#1287e0,#0a5fae); color:#fff; font-size:18px; font-weight:700; cursor:pointer;}
+  .gearBtn.on{background:linear-gradient(#2fbf4e,#1e8b3a); box-shadow:0 0 8px rgba(63,185,80,.6);}
+  #carCanvas{background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); border-radius:6px; cursor:pointer;}
+  #canData{flex:1;}
+  #canTable{border-collapse:collapse; width:100%; font-size:12.5px;}
+  #canTable td{border:1px solid rgba(255,255,255,.18); padding:4px 10px;}
+  #canTable td:first-child{color:#9fd0ff; width:140px; background:rgba(0,0,0,.2);}
+  #canMon{position:absolute; left:20px; right:20px; bottom:10px; height:104px; background:#020a12;
+    border:1px solid #1287e0; border-radius:4px; font-family:Consolas; font-size:11.5px;
+    color:#3fb950; padding:5px 10px; overflow:hidden; line-height:1.55; white-space:pre;}
+
+  /* ---- 媒体 ---- */
+  #mediaWrap{display:flex; position:absolute; top:40px; left:0; right:0; bottom:0;}
+  #mediaList{width:330px; border-right:1px solid rgba(255,255,255,.15); overflow:auto; padding:8px;}
+  #mediaNow{flex:1; padding:20px 26px; display:flex; flex-direction:column; gap:12px;}
+  #mediaTitle{font-size:20px; color:#ffd34d;}
+  #mediaBar{height:10px; background:rgba(255,255,255,.15); border-radius:5px; overflow:hidden; cursor:pointer;}
+  #mediaBarFill{height:100%; width:0%; background:#1287e0; transition:width .3s;}
+  #mediaCtrl{display:flex; gap:10px;}
+
+  /* ---- 方控 / 音效 / 个性化 ---- */
+  .secTitle{display:block; letter-spacing:2px; color:#ffd34d; margin:16px 0 6px; font-size:13.5px;}
+  .eqRow{display:flex; align-items:center; gap:10px; margin:7px 0; font-size:13px; flex-wrap:wrap;}
+  .eqRow input[type=range]{width:150px; accent-color:#1287e0;}
+  .eqRow .val{color:#ffd34d; min-width:34px; display:inline-block;}
+  .pfIn{background:#04243f; color:#fff; border:1px solid #1287e0; border-radius:5px; padding:5px 8px; font:inherit;}
+  .swcKey{padding:4px 11px; background:#101214; border:1px solid #2ea3f2; border-radius:5px;
+    color:#7ee787; font-family:Consolas; font-size:12px;}
+  .swcStat{font-size:12.5px; line-height:1.9; color:#cfe6ff;}
+  .swcStat b{color:#ffd34d;}
+
+  /* ---- 方控实体模拟条 ---- */
+  #swcrow{display:flex; gap:6px; margin-top:8px; align-items:center; flex-wrap:wrap;}
+  #swcrow .lbl{font-size:10px; color:#6b737c; letter-spacing:1px; margin-right:2px;}
+  .swcbtn{background:linear-gradient(#2a2f36,#191c20); border:1px solid #000; color:#9fd0ff;
+    font-size:10px; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:1px;}
+  .swcbtn:active{background:#1287e0; color:#fff;}
+  .swcbtn.learn{border-color:#ffd34d; color:#ffd34d; box-shadow:0 0 6px rgba(255,211,77,.5);}
+
+  /* ---- 倒车影像 / 刹车检测线 ---- */
+  #reverseCam{position:absolute; inset:0; z-index:45; display:none; background:#000;}
+  #reverseCam.active{display:block;}
+  #revCanvas{width:800px; height:480px;}
+  #revTag{position:absolute; top:10px; left:14px; color:#fff; font-size:13px;
+    background:rgba(0,0,0,.55); padding:4px 10px; border-radius:4px;}
+  #revGear{position:absolute; top:10px; right:14px; color:#ffd34d; font-size:20px; font-weight:700;
+    background:rgba(0,0,0,.55); padding:3px 12px; border-radius:4px;}
+  #brakeMsg{position:absolute; inset:0; z-index:44; display:none; background:rgba(0,0,0,.93);
+    color:#ffd34d; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+    text-align:center; line-height:1.8;}
+  #brakeMsg.active{display:flex;}
 </style>
 </head>
 <body>
@@ -263,11 +352,13 @@
         </div>
         <div id="iconGrid">
           <div class="licon" data-app="nav"><span class="ico">🧭</span>卫星导航<small>KLD NaviOne.exe</small></div>
-          <div class="licon" data-app="radio"><span class="ico">📻</span>收音机<small>FM / AM</small></div>
+          <div class="licon" data-app="radio"><span class="ico">📻</span>收音机<small>FM×3 / AM×2 · RDS</small></div>
+          <div class="licon" data-app="media"><span class="ico">🎵</span>媒体播放<small>USB / SD 音乐</small></div>
           <div class="licon" data-app="dvd"><span class="ico">💿</span>DVD / 视频<small>无媒介</small></div>
-          <div class="licon" data-app="bt"><span class="ico">📞</span>蓝牙电话<small>未连接</small></div>
+          <div class="licon" data-app="bt"><span class="ico">📞</span>蓝牙电话<small id="btIconSub">未配对</small></div>
+          <div class="licon" data-app="can"><span class="ico">🚗</span>行车电脑<small>CANBUS · 倒车</small></div>
           <div class="licon" data-app="sd"><span class="ico">💾</span>SD 卡管理<small>安装 / 测试通道</small></div>
-          <div class="licon" data-app="set"><span class="ico">⚙️</span>系统设置<small>CE6.0 系统信息</small></div>
+          <div class="licon" data-app="set"><span class="ico">⚙️</span>系统设置<small>音效 / 方控 / 个性化</small></div>
           <div class="licon" data-app="console"><span class="ico">🧪</span>测试控制台<small>调试 / 日志通道</small></div>
           <div class="licon" data-app="reboot"><span class="ico">🔄</span>重启系统<small>Cold Boot</small></div>
         </div>
@@ -353,31 +444,141 @@
             <button class="btn gray" data-app="sd">💾 SD 卡管理</button>
             <button class="btn red" data-app="reboot">🔄 冷启动</button>
           </div>
+
+          <span class="secTitle">🔊 音效设置（模拟 DSP）</span>
+          <div class="eqRow">EQ 预设：<span id="eqBtns" style="display:flex; gap:6px; flex-wrap:wrap;"></span></div>
+          <div class="eqRow">高音 <input type="range" id="eqBass" min="-5" max="5" value="0"><span class="val" id="eqBassV">0</span>
+            低音 <input type="range" id="eqTreble" min="-5" max="5" value="0"><span class="val" id="eqTrebleV">0</span></div>
+          <div class="eqRow">前后平衡 <input type="range" id="eqFader" min="-4" max="4" value="0"><span class="val" id="eqFaderV">中</span>
+            左右平衡 <input type="range" id="eqBal" min="-4" max="4" value="0"><span class="val" id="eqBalV">中</span></div>
+          <div class="eqRow">超重音增强 Loud：<button class="btn gray" id="eqLoud">关</button>
+            <span style="color:#9fd0ff">当前音量：<b id="eqVol" style="color:#ffd34d">18</b>/40</span></div>
+
+          <span class="secTitle">🎙 方向盘按键学习（SWC）</span>
+          <div class="swcStat" id="swcStat"></div>
+          <div class="eqRow">
+            <button class="btn" id="swcLearnBtn">🎓 开始重新学习</button>
+            <button class="btn gray" id="swcResetBtn">恢复默认映射</button>
+            <span style="color:#9fd0ff">学习时按屏幕提示，点击下方「方向盘按键模拟条」上的对应按键</span>
+          </div>
+
+          <span class="secTitle">🎨 个性化</span>
+          <div class="eqRow">开机 LOGO：<input class="pfIn" id="pfLogo" maxlength="16" placeholder="留空=默认 CE6.0">
+            <button class="btn gray" id="pfLogoApply">应用</button></div>
+          <div class="eqRow">壁纸：<span id="pfWall" style="display:flex; gap:6px;"></span></div>
+          <div class="eqRow">按键灯色：<span id="pfLight" style="display:flex; gap:6px;"></span>
+            亮度 <input type="range" id="pfBright" min="40" max="100" value="100"><span class="val" id="pfBrightV">100%</span></div>
+          <div class="eqRow">时间制式：<button class="btn gray" id="pfClock">24 小时</button>
+            刹车检测线（行车禁看视频）：<button class="btn gray" id="pfBrake">开</button></div>
+
+          <span class="secTitle">🔌 扩展模块（选配 · 未安装则显示未检测）</span>
+          <table>
+            <tr><td>数字电视 CMMB</td><td>未安装模块（需外接 DTV box）</td></tr>
+            <tr><td>行车记录仪 DVR</td><td>未检测到 AV 输入信号</td></tr>
+            <tr><td>胎压监测 TPMS</td><td>传感器未配对（4 个）</td></tr>
+            <tr><td>OBD-II 诊断</td><td>未连接 · 支持 ELM327 协议（测试通道）</td></tr>
+          </table>
         </div>
       </div>
 
       <!-- 收音机 -->
       <div id="radioPage" class="screen-page">
         <div id="radioWrap">
-          <div class="pageTop" style="background:transparent; padding:0; height:auto; margin-bottom:16px;">
+          <div class="pageTop" style="background:transparent; padding:0; height:auto; margin-bottom:10px;">
             <b>收音机</b><small id="radioMode">FM1 · 立体声</small>
             <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span>
           </div>
           <div id="radioFreq">101.7<small> MHz</small></div>
+          <div id="rdsRow"><span id="rdsName">---</span><span class="pty" id="rdsPty">PTY: ---</span><span class="pty" id="rdsAf">AF 关</span></div>
           <div id="radioBand">
             <button class="btn" data-band="FM1">FM1</button>
             <button class="btn" data-band="FM2">FM2</button>
-            <button class="btn" data-band="AM">AM</button>
-            <button class="btn gray" id="radioPrev">◀ 频率-</button>
-            <button class="btn gray" id="radioNext">频率+ ▶</button>
+            <button class="btn" data-band="FM3">FM3</button>
+            <button class="btn" data-band="AM1">AM1</button>
+            <button class="btn" data-band="AM2">AM2</button>
+            <button class="btn gray" id="radioPrev">◀◀ 频率-</button>
+            <button class="btn gray" id="radioNext">频率+ ▶▶</button>
+            <button class="btn gray" id="radioSeek">搜台</button>
+            <button class="btn gray" id="radioScan">扫描存台</button>
+            <button class="btn gray" id="radioStereo">立体声</button>
+            <button class="btn gray" id="radioRdsBtn">RDS</button>
           </div>
           <div id="radioPresets"></div>
+          <div style="font-size:11px; color:#7fb7e8; margin-top:10px;">单击预置台播放 · 长按 0.6 秒把当前频率存入该预置位（共 5 波段 × 6 台 = 30 台）</div>
         </div>
       </div>
 
-      <!-- DVD / 蓝牙 占位 -->
+      <!-- DVD / 视频 -->
       <div id="dvdPage" class="screen-page stdPage"><div class="placeholder"><div class="big">💿</div><div>未检测到光盘（请插入 DVD）</div><button class="btn gray" data-app="home">返回主界面</button></div></div>
-      <div id="btPage" class="screen-page stdPage"><div class="placeholder"><div class="big">📞</div><div>蓝牙未连接 · 请在手机端搜索 “TOYOTA-HU”</div><button class="btn gray" data-app="home">返回主界面</button></div></div>
+
+      <!-- 蓝牙电话 -->
+      <div id="btPage" class="screen-page stdPage">
+        <div class="pageTop"><b>蓝牙电话</b><small id="btTopStat">未配对</small>
+          <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span></div>
+        <div style="padding:10px 24px 0;">
+          <div id="btTabs">
+            <div class="btTab on" data-bttab="pair">配对管理</div>
+            <div class="btTab" data-bttab="phone">电话</div>
+            <div class="btTab" data-bttab="music">蓝牙音乐 (A2DP)</div>
+          </div>
+          <div id="btStatus"></div>
+        </div>
+        <div id="btContent"></div>
+      </div>
+
+      <!-- 媒体播放 -->
+      <div id="mediaPage" class="screen-page stdPage">
+        <div class="pageTop"><b>媒体播放 · USB / SD</b><small id="mediaState">就绪</small>
+          <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span></div>
+        <div id="mediaWrap">
+          <div id="mediaList"></div>
+          <div id="mediaNow">
+            <div id="mediaTitle">未加载音轨</div>
+            <div style="font-size:12px; color:#9fd0ff;" id="mediaSub">SD:\Media\</div>
+            <div id="mediaBar"><div id="mediaBarFill"></div></div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:#9fd0ff;">
+              <span id="mediaPos">00:00</span><span id="mediaDur">00:00</span></div>
+            <div id="mediaCtrl">
+              <button class="btn gray" id="mdPrev">⏮ 上一曲</button>
+              <button class="btn" id="mdPlay">▶ 播放</button>
+              <button class="btn gray" id="mdNext">下一曲 ⏭</button>
+              <button class="btn gray" id="mdMode">循环:列表</button>
+            </div>
+            <div style="font-size:11px; color:#7fb7e8;">断点续播已启用（记住上次播放位置）· 刹车检测线仅限制视频</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行车电脑 / CANBUS -->
+      <div id="canPage" class="screen-page stdPage">
+        <div class="pageTop"><b>行车电脑 · CANBUS</b><small>模拟 DLC 报文 · 采样 500ms</small>
+          <span style="margin-left:auto; cursor:pointer; color:#9fd0ff" data-app="home">← 返回主界面</span></div>
+        <div id="canWrap">
+          <div id="canLeft">
+            <div style="color:#9fd0ff; font-size:12px;">挡位（挂 R 自动切入倒车影像）</div>
+            <div id="gearRow"></div>
+            <canvas id="carCanvas" width="300" height="185"></canvas>
+            <div style="font-size:11px; color:#7fb7e8; margin-top:6px;">点击车身示意图车门可开/关门 · 点击车头/车尾切换大灯与示宽灯</div>
+          </div>
+          <div id="canData"><table id="canTable"></table></div>
+        </div>
+        <div id="canMon"></div>
+      </div>
+
+      <!-- 倒车影像（全局覆盖） -->
+      <div id="reverseCam">
+        <canvas id="revCanvas" width="800" height="480"></canvas>
+        <div id="revTag">倒车影像 · CVBS 输入 · OPS 原车 8 探头</div>
+        <div id="revGear">R</div>
+      </div>
+
+      <!-- 刹车检测线 -->
+      <div id="brakeMsg">
+        <div style="font-size:52px;">⛔</div>
+        <div style="font-size:19px;">行车中禁止观看视频<br>
+          <small style="font-size:13px; color:#9fd0ff;">刹车检测线已启用 · 挂 P 挡后可继续（系统设置中可关闭）</small></div>
+        <button class="btn" id="brakeOk">模拟挂 P 挡并继续</button>
+      </div>
 
       <!-- 运行中的 exe 窗口 -->
       <div id="exeWin"><div id="exeWinBar"><span id="exeWinTitle">程序</span><span class="x" id="exeWinX">×</span></div><div id="exeWinBody"></div></div>
@@ -404,11 +605,24 @@
     <div id="sdSlot" title="点击弹出/插入虚拟 SD 卡"><span class="led"></span><span id="sdSlotTxt">SD CARD</span></div>
     <div id="volKnob"></div>
   </div>
+  <div id="swcrow">
+    <span class="lbl">方向盘按键模拟 (SWC)：</span>
+    <button class="swcbtn" data-swc="vol+">VOL+</button>
+    <button class="swcbtn" data-swc="vol-">VOL−</button>
+    <button class="swcbtn" data-swc="ch+">CH+</button>
+    <button class="swcbtn" data-swc="ch-">CH−</button>
+    <button class="swcbtn" data-swc="mode">MODE</button>
+    <button class="swcbtn" data-swc="mute">MUTE</button>
+    <button class="swcbtn" data-swc="tel">TEL 接听/挂断</button>
+    <button class="swcbtn" data-swc="nav">NAV</button>
+    <span class="lbl" id="swcHint" style="margin-left:8px;"></span>
+  </div>
 </div>
 
 <div id="hint">
   调研结论：2010 年代前后老款丰田（卡罗拉/凯美瑞 2007–2011 等）后装/专车专用车机普遍运行 <b>Windows Embedded CE 6.0</b>（少量早期机型为 CE 5.0），凯立德地图以 SD 卡 \NaviOne 目录形式装载，NaviOne.exe 为入口，端口/波特率由 naviconfig.txt 控制。<br>
-  测试通道：①「SD 卡管理」拖入文件即可安装并持久化；② 「测试控制台」(F12) 支持 dir/cat/write/gps/nmea/port/run 等命令；③ 全局 JS API：<b>window.kld</b>（可在浏览器 DevTools 直接调用）。
+  v0.2 系统层：蓝牙配对/电话本/A2DP · 收音机 5 波段×6 预置+RDS+搜台/长按存台 · 倒车影像+OPS 雷达（挂 R 触发）· 行车电脑 CAN 报文 · 方向盘按键学习 · EQ/声场音效 · 开机LOGO/壁纸/按键灯/刹车检测线 · SD 媒体断点续播。<br>
+  测试通道：①「SD 卡管理」拖入文件即可安装并持久化；② 控制台 (F12) 新增 gear/bt/eq/vol/media/can/swc/radio 命令；③ 全局 JS API：<b>window.kld</b>（含 setGear/bt/can/radio/prefs）；④ 屏幕下方「方控按键模拟条」。
 </div>
 
 <script>
@@ -475,7 +689,7 @@ function toast(msg, ms=1400){
 
 /* ---------------- 页面路由 ---------------- */
 const PAGES = {boot:'bootPage', home:'launcher', nav:'navPage', sd:'sdPage', set:'setPage',
-               radio:'radioPage', dvd:'dvdPage', bt:'btPage'};
+               radio:'radioPage', dvd:'dvdPage', bt:'btPage', media:'mediaPage', can:'canPage'};
 let curPage = 'boot';
 function show(id){
   Object.values(PAGES).forEach(p=>$(p).classList.remove('active'));
@@ -486,13 +700,7 @@ function show(id){
 document.addEventListener('click', e=>{
   const a = e.target.closest('[data-app]');
   if(!a) return;
-  const app = a.dataset.app;
-  if(app==='home') show(PAGES.home);
-  else if(app==='reboot') boot();
-  else if(app==='console') toggleConsole(true);
-  else if(PAGES[app]) show(PAGES[app]);
-  if(app==='sd') renderTree();
-  if(app==='set') renderSet();
+  openApp(a.dataset.app);
 });
 
 /* ---------------- 启动流程（WinCE 冷启动） ---------------- */
@@ -509,6 +717,9 @@ const BOOT_LINES = [
 function boot(){
   show('boot');
   $('bootLines').innerHTML='';
+  $('bootLogo').innerHTML = prefs.logo
+    ? `${prefs.logo} <b>CE6.0</b>`
+    : `Windows Embedded <b>CE 6.0</b>`;
   let i=0;
   clearInterval(boot._t);
   boot._t = setInterval(()=>{
@@ -583,7 +794,7 @@ function toNMEA(){
   const date = `${pad(d.getUTCDate())}${pad(d.getUTCMonth()+1)}${String(d.getUTCFullYear()).slice(2)}`;
   const knots = (gps.speed*1.94384).toFixed(2);
   const gga = `GPGGA,${utc},${dm(lat,true)},${dm(lon,false)},1,${gps.sats},1.2,${ORIGIN.lat.toFixed(1)},M,0.0,M,,`;
-  const rmc = `GPRMC,${utc},A,${dm(lat,true)},${dm(lon,false)},${knets},${(gps.heading).toFixed(2)},${date},,,A`;
+  const rmc = `GPRMC,${utc},A,${dm(lat,true)},${dm(lon,false)},${knots},${(gps.heading).toFixed(2)},${date},,,A`;
   return ['$'+gga+'*'+nmeaChecksum(gga), '$'+rmc+'*'+nmeaChecksum(rmc)];
 }
 
@@ -927,23 +1138,103 @@ function toggleSd(){
 }
 $('sdSlot').addEventListener('click',toggleSd);
 
-/* ---------------- 收音机 ---------------- */
-let radioFreq=101.7, radioBand='FM1';
-const PRESETS={FM1:[87.5,90.2,94.0,97.4,101.7],FM2:[103.9,105.7,106.6,108.0,96.6],AM:[540,720,900,1080,1400]};
+/* ---------------- 收音机（5 波段 × 6 预置 · RDS · 搜台/扫描 · 长按存台） ---------------- */
+const RADIO_KEY='kld_sim_radio_v2';
+const BANDS={
+  FM1:{min:87.5,max:108,step:0.1,unit:'MHz'}, FM2:{min:87.5,max:108,step:0.1,unit:'MHz'},
+  FM3:{min:87.5,max:108,step:0.1,unit:'MHz'},
+  AM1:{min:530,max:1620,step:10,unit:'kHz'}, AM2:{min:530,max:1620,step:10,unit:'kHz'}
+};
+const STATIONS=[
+  {f:87.5,n:'CRI 外广',p:'News'},{f:90.2,n:'都市之声',p:'Info'},{f:94.0,n:'CNR 都市',p:'Info'},
+  {f:97.4,n:'音乐之声',p:'Pop'},{f:101.7,n:'动感广播',p:'Pop'},{f:103.9,n:'CNR 交通',p:'Traffic'},
+  {f:105.7,n:'经典音乐',p:'Culture'},{f:106.6,n:'CNR 网络',p:'Info'},
+  {f:540,n:'CNR 中国之声',p:'News'},{f:720,n:'CNR 中国之声',p:'News'},{f:900,n:'经济之声',p:'Biz'},
+  {f:1080,n:'教育之声',p:'Edu'},{f:1400,n:'生活服务',p:'Life'}
+];
+const DEFAULT_PRESETS={
+  FM1:[87.5,90.2,94.0,97.4,101.7,103.9], FM2:[105.7,106.6,96.6,98.6,100.6,107.5],
+  FM3:[88.1,91.2,93.6,95.8,99.0,102.7], AM1:[540,720,900,1080,1400,1620],
+  AM2:[600,800,1000,1200,1300,1500]
+};
+let radio={band:'FM1', freq:{FM1:101.7,FM2:96.6,FM3:89.7,AM1:540,AM2:900},
+           presets:JSON.parse(JSON.stringify(DEFAULT_PRESETS)), rds:true, stereo:true, af:false};
+try{ const s=JSON.parse(localStorage.getItem(RADIO_KEY)); if(s) radio=Object.assign(radio,s); }catch(e){}
+function radioSave(){ try{ localStorage.setItem(RADIO_KEY, JSON.stringify(radio)); }catch(e){} }
+function bandIsFM(){ return radio.band.startsWith('FM'); }
+function rxFreq(){ return radio.freq[radio.band]; }
+function fmtFreq(f){ return bandIsFM() ? (+f).toFixed(1) : String(Math.round(f)); }
+function radioStep(d){
+  const b=BANDS[radio.band];
+  let f=rxFreq()+d*b.step;
+  if(f>b.max+1e-9) f=b.min;
+  if(f<b.min-1e-9) f=b.max;
+  radio.freq[radio.band]=bandIsFM()? +f.toFixed(1) : Math.round(f);
+  radioSave(); renderRadio();
+}
+function stationAt(){
+  const f=rxFreq(), tol=bandIsFM()?0.051:6;
+  return STATIONS.find(s=>Math.abs(s.f-f)<tol);
+}
+function bandStations(){
+  const b=BANDS[radio.band];
+  return STATIONS.filter(s=>s.f>=b.min && s.f<=b.max);
+}
+function radioSeek(){
+  const list=bandStations(), cur=rxFreq(), tol=bandIsFM()?0.051:6;
+  const next=list.find(s=>s.f>cur+tol) || list[0];
+  if(!next) return clog('warn','本波段无强台');
+  radio.freq[radio.band]=next.f; radioSave(); renderRadio();
+  clog('ok', `搜台 → ${next.f} ${next.n} [${next.p}]`);
+}
+function radioScan(){
+  const list=bandStations();
+  if(!list.length) return clog('warn','本波段无可存电台');
+  let start=list.findIndex(s=>s.f>=rxFreq()); if(start<0) start=0;
+  const six=[]; for(let i=0;i<6;i++) six.push(list[(start+i)%list.length].f);
+  radio.presets[radio.band]=six; radio.freq[radio.band]=six[0];
+  radioSave(); renderRadio();
+  clog('ok','自动扫描完成，'+radio.band+' 已存入 6 台: '+six.join(', '));
+}
+function setBand(b){ radio.band=b; radioSave(); renderRadio(); clog('ok','切换波段 '+b+' @ '+fmtFreq(rxFreq())+' '+BANDS[b].unit); }
 function renderRadio(){
-  $('radioFreq').innerHTML=radioFreq.toFixed(1)+'<small> '+(radioBand==='AM'?'kHz':'MHz')+'</small>';
-  $('radioMode').textContent=radioBand+' · 立体声';
+  const u=BANDS[radio.band].unit;
+  $('radioFreq').innerHTML=fmtFreq(rxFreq())+'<small> '+u+'</small>';
+  const st=stationAt();
+  $('rdsName').textContent = radio.rds ? (st? 'RDS: '+st.n : 'RDS: --- 弱信号') : 'RDS 关闭';
+  $('rdsPty').textContent = 'PTY: '+(st? st.p : '---');
+  $('rdsAf').textContent = 'AF '+(radio.af?'开':'关');
+  $('radioMode').textContent = radio.band+' · '+(radio.stereo?'立体声':'单声道')+' · '+u;
+  document.querySelectorAll('[data-band]').forEach(x=>x.classList.toggle('gray', x.dataset.band!==radio.band));
+  $('radioStereo').textContent = radio.stereo?'立体声 ✓':'立体声';
+  $('radioRdsBtn').textContent = radio.rds?'RDS ✓':'RDS';
   const box=$('radioPresets'); box.innerHTML='';
-  PRESETS[radioBand].forEach((f,i)=>{
+  radio.presets[radio.band].forEach((f,i)=>{
     const d=document.createElement('div'); d.className='preset';
-    d.innerHTML=`${f}<small>P${i+1}</small>`;
-    d.addEventListener('click',()=>{radioFreq=f; renderRadio(); clog('ok','收音机调谐到 '+f);});
+    const s=STATIONS.find(s=>Math.abs(s.f-f)<(bandIsFM()?0.051:6));
+    d.innerHTML=`${fmtFreq(f)}<small>P${i+1}${s?' · '+s.n:''}</small>`;
+    let t0=null, longFired=false;
+    d.addEventListener('mousedown',()=>{ longFired=false;
+      t0=setTimeout(()=>{ t0=null; longFired=true;
+        radio.presets[radio.band][i]=rxFreq(); radioSave(); renderRadio();
+        toast('已存台 P'+(i+1)); clog('ok','长按存台 '+radio.band+' P'+(i+1)+' = '+fmtFreq(rxFreq()));
+      },600);
+    });
+    d.addEventListener('mouseup',()=>{
+      if(t0){ clearTimeout(t0); t0=null; }
+      if(!longFired){ radio.freq[radio.band]=f; radioSave(); renderRadio(); clog('ok','调谐到 '+fmtFreq(f)+' '+u+(s?' ['+s.n+']':'')); }
+    });
+    d.addEventListener('mouseleave',()=>{ if(t0){ clearTimeout(t0); t0=null; } });
     box.appendChild(d);
   });
 }
-$('radioPrev').addEventListener('click',()=>{radioFreq=Math.max(radioBand==='AM'?530:87.5, +(radioFreq-(radioBand==='AM'?10:0.1)).toFixed(1)); renderRadio();});
-$('radioNext').addEventListener('click',()=>{radioFreq=Math.min(radioBand==='AM'?1620:108.0, +(radioFreq+(radioBand==='AM'?10:0.1)).toFixed(1)); renderRadio();});
-document.querySelectorAll('[data-band]').forEach(b=>b.addEventListener('click',()=>{radioBand=b.dataset.band; renderRadio();}));
+$('radioPrev').addEventListener('click',()=>radioStep(-1));
+$('radioNext').addEventListener('click',()=>radioStep(1));
+$('radioSeek').addEventListener('click',radioSeek);
+$('radioScan').addEventListener('click',radioScan);
+$('radioStereo').addEventListener('click',()=>{ radio.stereo=!radio.stereo; radioSave(); renderRadio(); clog('ok','立体声: '+(radio.stereo?'开':'关')); });
+$('radioRdsBtn').addEventListener('click',()=>{ radio.rds=!radio.rds; radioSave(); renderRadio(); clog('ok','RDS: '+(radio.rds?'开':'关')); });
+document.querySelectorAll('[data-band]').forEach(b=>b.addEventListener('click',()=>setBand(b.dataset.band)));
 
 /* ---------------- 设置页 ---------------- */
 function renderSet(){
@@ -952,7 +1243,563 @@ function renderSet(){
   $('setMap').textContent = sd.mounted && sd.files['/NaviOne/NaviOne.exe'] ? 'SD:\\NaviOne\\ 正常' : 'SD:\\NaviOne\\ 缺失（导航将无法启动）';
   if(!$('setSerial').textContent || $('setSerial').textContent==='—')
     $('setSerial').textContent = Array.from({length:16},()=>'0123456789ABCDEF'[Math.floor(Math.random()*16)]).join('');
+  if(typeof renderSetExt==='function') renderSetExt();
 }
+
+/* =======================================================================
+   v0.2 系统层功能：个性化 / 音效 / 方控学习 / 蓝牙 / CAN & 倒车影像 / 媒体
+   ======================================================================= */
+/* ---------------- 应用打开（含刹车检测线拦截） ---------------- */
+let pendingApp=null;
+function openApp(app){
+  if(app==='home'){ show(PAGES.home); return; }
+  if(app==='reboot'){ boot(); return; }
+  if(app==='console'){ toggleConsole(true); return; }
+  if(app==='dvd' && prefs.brake && can.gear==='D'){
+    pendingApp='dvd'; $('brakeMsg').classList.add('active');
+    clog('warn','刹车检测线触发：D 挡禁止进入视频'); return;
+  }
+  if(!PAGES[app]) return;
+  show(PAGES[app]);
+  if(app==='radio') renderRadio();
+  if(app==='bt') renderBT();
+  if(app==='media') renderMedia();
+  if(app==='can') renderCan();
+  if(app==='set') renderSet();
+  if(app==='sd') renderTree();
+}
+$('brakeOk').addEventListener('click',()=>{
+  setGear('P'); $('brakeMsg').classList.remove('active');
+  if(pendingApp){ const a=pendingApp; pendingApp=null; openApp(a); }
+  pendingApp=null;
+});
+
+/* ---------------- 系统偏好（音效 / 方控 / 个性化） ---------------- */
+const PREF_KEY='kld_sim_pref_v2';
+const WALLS=[
+  'linear-gradient(160deg, rgba(10,99,184,.9), rgba(6,44,84,.95) 55%, #041a30)',
+  'linear-gradient(160deg, #3a1c71, #d76d77 55%, #ffaf7b)',
+  'linear-gradient(160deg, #134e5e, #71b280)',
+  'linear-gradient(160deg, #232526, #414345)',
+  'linear-gradient(160deg, #42275a, #734b6d 60%, #1f1530)'
+];
+const LIGHTS=[{n:'冰白',c:'#cfd6de'},{n:'炽红',c:'#ff5f5f'},{n:'橙',c:'#ffb14d'},
+              {n:'琥珀',c:'#ffe14d'},{n:'绿',c:'#5fff8a'},{n:'蓝',c:'#5fb6ff'},{n:'紫',c:'#c77dff'}];
+const EQ_PRESETS={'关闭':{b:0,t:0},'流行':{b:2,t:1},'摇滚':{b:4,t:3},'古典':{b:1,t:2},'影院':{b:3,t:1},'用户':{b:0,t:0}};
+const SWC_KEYS=['vol+','vol-','ch+','ch-','mode','mute','tel','nav'];
+const SWC_LABELS={'vol+':'VOL+ 音量增','vol-':'VOL− 音量减','ch+':'CH+ 上一电台/曲','ch-':'CH− 下一电台/曲',
+  'mode':'MODE 源切换','mute':'MUTE 静音','tel':'TEL 接听/挂断','nav':'NAV 导航',
+  'home':'HOME 主界面','none':'不动作'};
+const LEARN_SEQ=['vol+','vol-','ch+','ch-','mode','mute','tel','nav'];
+function defaultSwc(){ const m={}; SWC_KEYS.forEach(k=>m[k]=k); return m; }
+const prefs = Object.assign({
+  logo:'', wall:0, light:0, bright:100, clock24:true, brake:true,
+  audio:{eq:'关闭', bass:0, treble:0, fader:0, bal:0, loud:false},
+  swc:defaultSwc()
+}, (()=>{ try{ return JSON.parse(localStorage.getItem(PREF_KEY))||{}; }catch(e){ return {}; } })());
+if(!prefs.swc || typeof prefs.swc!=='object') prefs.swc=defaultSwc();
+function savePrefs(){ try{ localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); }catch(e){} }
+function applyPrefs(){
+  $('launcher').style.background = WALLS[prefs.wall]||WALLS[0];
+  document.querySelectorAll('.hwbtn').forEach(b=>b.style.color=(LIGHTS[prefs.light]||LIGHTS[0]).c);
+  $('screen').style.filter = `brightness(${prefs.bright/100})`;
+}
+
+/* ---------------- 音量 ---------------- */
+let vol=18;
+function setVol(n){
+  vol=Math.max(0,Math.min(40,n));
+  toast('音量 '+vol); clog('ok','VOL = '+vol);
+  const e=$('eqVol'); if(e) e.textContent=vol;
+}
+
+/* ---------------- 方向盘按键学习 (SWC) ---------------- */
+let learnIdx=-1;
+function swcPhysical(key){
+  if(learnIdx>=0){
+    const act=LEARN_SEQ[learnIdx];
+    prefs.swc[key]=act; savePrefs(); learnIdx++;
+    if(learnIdx>=LEARN_SEQ.length){
+      learnIdx=-1; $('swcHint').textContent='';
+      document.querySelectorAll('.swcbtn').forEach(b=>b.classList.remove('learn'));
+      toast('方控学习完成'); clog('ok','SWC 学习完成：'+swcMapText());
+    }else swcPrompt();
+    renderSwc(); return;
+  }
+  const act=prefs.swc[key]||key;
+  clog('ok',`方控 ${key.toUpperCase()} → ${SWC_LABELS[act]||act}`);
+  swcAction(act);
+}
+function swcPrompt(){
+  const act=LEARN_SEQ[learnIdx];
+  $('swcHint').textContent=`学习中 (${learnIdx+1}/8)：请按下对应「${SWC_LABELS[act]}」的方控按键`;
+  document.querySelectorAll('.swcbtn').forEach(b=>b.classList.add('learn'));
+  toast('学习 '+(learnIdx+1)+'/8：'+SWC_LABELS[act], 2600);
+}
+function swcMapText(){ return SWC_KEYS.map(k=>`${k}→${prefs.swc[k]||k}`).join('  '); }
+function swcAction(a){
+  switch(a){
+    case 'vol+': setVol(vol+2); break;
+    case 'vol-': setVol(vol-2); break;
+    case 'ch+': if(curPage==='radio') radioStep(1); else mediaNext(); break;
+    case 'ch-': if(curPage==='radio') radioStep(-1); else mediaPrev(); break;
+    case 'mode': cycleMode(); break;
+    case 'mute': setVol(vol>0?0:18); break;
+    case 'tel': btTel(); break;
+    case 'nav': openApp('nav'); gps.on=true; break;
+    case 'home': openApp('home'); break;
+    default: break;
+  }
+}
+function cycleMode(){
+  const order=['radio','media','bt','nav','home'];
+  const i=order.indexOf(curPage);
+  const next=order[(i+1)%order.length];
+  if(next==='nav') gps.on=true;
+  openApp(next);
+}
+document.querySelectorAll('[data-swc]').forEach(b=>
+  b.addEventListener('click',()=>swcPhysical(b.dataset.swc)));
+function renderSwc(){
+  const el=$('swcStat'); if(!el) return;
+  el.innerHTML = SWC_KEYS.map(k=>`<b>${SWC_LABELS[k].split(' ')[0]}</b> → ${SWC_LABELS[prefs.swc[k]||k]}`).join('<br>')
+    + (learnIdx>=0? '<br><span style="color:#ffd34d">⏳ 学习进行中…</span>':'');
+}
+
+/* ---------------- 蓝牙（配对 / 电话 / A2DP） ---------------- */
+const BT_KEY='kld_sim_bt_v2';
+const BT_NAME='TOYOTA-HU', BT_PIN='0000';
+const bt = Object.assign({paired:false, tab:'pair', dial:'', calling:null, callSec:0,
+                          ringing:false, playing:false, track:0, pos:0},
+                         (()=>{ try{ return JSON.parse(localStorage.getItem(BT_KEY))||{}; }catch(e){ return {}; } })());
+const BT_CONTACTS=[{n:'家',t:'13800138000'},{n:'李娜',t:'13912345678'},{n:'王强',t:'13611223344'},
+  {n:'4S 店服务',t:'4008100080'},{n:'高速救援',t:'122'},{n:'公司前台',t:'01088886666'}];
+const BT_CALLS=[{n:'李娜',d:'已拨',w:'今天 09:12'},{n:'家',d:'已接',w:'昨天 20:41'},
+  {n:'13866668888',d:'未接',w:'昨天 21:04'},{n:'4S 店服务',d:'已拨',w:'周三 15:20'}];
+const BT_TRACKS=[{t:'旅行的意义',a:'陈绮贞',d:258},{t:'倔强',a:'五月天',d:245},
+  {t:'晴天',a:'周杰伦',d:269},{t:'平凡之路',a:'朴树',d:301}];
+function btSave(){ try{ localStorage.setItem(BT_KEY, JSON.stringify({paired:bt.paired,track:bt.track,pos:bt.pos})); }catch(e){} }
+function fmtSec(s){ const p=n=>String(n).padStart(2,'0'); return p(Math.floor(s/60))+':'+p(s%60); }
+function renderBT(){
+  const st = bt.paired ? '已连接 · iPhone(小李) · 电话本 6 条 · 通话记录 4 条' : `未配对 · 请搜索设备 “${BT_NAME}” · PIN ${BT_PIN}`;
+  $('btTopStat').textContent = bt.paired?'已配对':'未配对';
+  const sub=$('btIconSub'); if(sub) sub.textContent = bt.paired?'已连接':'未配对';
+  $('btStatus').textContent = st;
+  document.querySelectorAll('.btTab').forEach(t=>t.classList.toggle('on', t.dataset.bttab===bt.tab));
+  const c=$('btContent');
+  if(bt.tab==='pair'){
+    c.innerHTML=`
+      <div class="btCallBox" style="width:340px; text-align:left; line-height:2;">
+        <b style="color:#ffd34d">本机蓝牙</b><br>设备名：${BT_NAME}<br>PIN 码：${BT_PIN}<br>
+        状态：<span style="color:${bt.paired?'#7ee787':'#d29922'}">${bt.paired?'✓ 已配对连接':'○ 等待配对'}</span><br>
+        协议：HFP 1.5 · A2DP · PBAP
+      </div>
+      <div class="eqRow" style="margin-top:12px;">
+        <button class="btn" data-bt="pair">${bt.paired?'断开连接':'🔍 搜索并配对'}</button>
+        <button class="btn gray" data-bt="ring">📲 模拟手机来电</button>
+      </div>`;
+    return;
+  }
+  if(bt.tab==='phone'){
+    if(!bt.paired){ c.innerHTML='<div style="color:#d29922">未配对，请先在「配对管理」中完成配对。</div>'; return; }
+    if(bt.ringing){
+      c.innerHTML=`<div class="btCallBox"><div style="color:#ffd34d; font-size:17px;">来电中…</div>
+        <div style="font-size:22px; margin:8px 0;">李娜</div><div style="color:#9fd0ff">139****5678</div>
+        <div class="eqRow" style="justify-content:center; margin-top:10px;">
+          <button class="btn" data-bt="answer">接听</button>
+          <button class="btn red" data-bt="reject">拒接</button></div></div>`;
+      return;
+    }
+    if(bt.calling){
+      c.innerHTML=`<div class="btCallBox"><div style="color:#7ee787;">通话中</div>
+        <div style="font-size:18px; margin:6px 0;">${bt.calling}</div>
+        <div style="font-size:24px; color:#ffd34d; font-family:Consolas;" id="callTimer">${fmtSec(bt.callSec)}</div>
+        <div class="eqRow" style="justify-content:center; margin-top:10px;">
+          <button class="btn red" data-bt="hangup">挂断</button></div></div>`;
+      return;
+    }
+    c.innerHTML=`
+      <div class="btCols">
+        <div>
+          <div id="dialNum">${bt.dial||' '}</div><br>
+          <div class="btGrid">
+            ${['1','2','3','4','5','6','7','8','9','*','0','#'].map(k=>`<div class="btKey" data-bt="key:${k}">${k}</div>`).join('')}
+          </div>
+          <div class="eqRow" style="margin-top:8px;">
+            <button class="btn" data-bt="call">📞 拨打</button>
+            <button class="btn gray" data-bt="del">⌫ 退格</button>
+          </div>
+        </div>
+        <div>
+          <div style="color:#ffd34d; margin-bottom:4px;">电话本（PBAP 同步）</div>
+          <ul class="btList">${BT_CONTACTS.map((p,i)=>`<li data-bt="contact:${i}"><span>${p.n}</span><small>${p.t}</small></li>`).join('')}</ul>
+        </div>
+        <div>
+          <div style="color:#ffd34d; margin-bottom:4px;">通话记录</div>
+          <ul class="btList">${BT_CALLS.map((p,i)=>`<li data-bt="contact:${i}"><span>${p.n}<br><small>${p.w}</small></span>
+            <small style="color:${p.d==='未接'?'#f85149':'#9fd0ff'}">${p.d}</small></li>`).join('')}</ul>
+        </div>
+      </div>`;
+    return;
+  }
+  // music tab
+  if(!bt.paired){ c.innerHTML='<div style="color:#d29922">未配对，请先在「配对管理」中完成配对。</div>'; return; }
+  const tr=BT_TRACKS[bt.track%BT_TRACKS.length];
+  c.innerHTML=`
+    <div style="display:flex; gap:24px; align-items:center;">
+      <div style="font-size:60px;">🎵</div>
+      <div style="flex:1;">
+        <div style="font-size:19px; color:#ffd34d;">${tr.t}</div>
+        <div style="color:#9fd0ff; font-size:13px;">${tr.a} · A2DP SBC 48kHz</div>
+        <div style="height:10px; background:rgba(255,255,255,.15); border-radius:5px; overflow:hidden; margin-top:10px;">
+          <div id="btBarFill" style="height:100%; width:${(bt.pos/tr.d*100).toFixed(1)}%; background:#1287e0;"></div></div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#9fd0ff; margin-top:4px;">
+          <span>${fmtSec(bt.pos)}</span><span>${fmtSec(tr.d)}</span></div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn gray" data-bt="btprev">⏮</button>
+        <button class="btn" data-bt="btplay">${bt.playing?'⏸ 暂停':'▶ 播放'}</button>
+        <button class="btn gray" data-bt="btnext">⏭</button>
+      </div>
+    </div>`;
+}
+$('btPage').addEventListener('click', e=>{
+  const t=e.target.closest('[data-bttab]');
+  if(t){ bt.tab=t.dataset.bttab; renderBT(); return; }
+  const b=e.target.closest('[data-bt]');
+  if(!b) return;
+  const [act,arg]=b.dataset.bt.split(':');
+  if(act==='pair'){
+    if(bt.paired){ bt.paired=false; clog('warn','蓝牙已断开连接'); }
+    else{ bt.paired=true; clog('ok',`蓝牙配对成功: ${BT_NAME} PIN ${BT_PIN} · 电话本/通话记录已同步`); toast('配对成功'); }
+    btSave(); renderBT();
+  }
+  else if(act==='ring'){ bt.ringing=true; bt.tab='phone'; renderBT(); clog('ok','模拟来电：李娜 139****5678'); }
+  else if(act==='answer'){ bt.ringing=false; bt.calling='李娜'; bt.callSec=0; renderBT(); clog('ok','已接听来电'); }
+  else if(act==='reject'||act==='hangup'){ bt.ringing=false; bt.calling=null; renderBT(); clog('ok','通话已结束 '+fmtSec(bt.callSec)); }
+  else if(act==='call'){
+    if(!bt.dial) return;
+    bt.calling=bt.dial; bt.callSec=0; renderBT(); clog('ok','拨出: '+bt.dial);
+  }
+  else if(act==='contact'){ const p=BT_CONTACTS[+arg]||BT_CONTACTS[0]; bt.dial=p.t; renderBT(); }
+  else if(act==='key'){ bt.dial+=arg; renderBT(); }
+  else if(act==='del'){ bt.dial=bt.dial.slice(0,-1); renderBT(); }
+  else if(act==='btplay'){ bt.playing=!bt.playing; btSave(); renderBT(); clog('ok','A2DP '+(bt.playing?'播放':'暂停')); }
+  else if(act==='btprev'){ bt.track=(bt.track-1+BT_TRACKS.length)%BT_TRACKS.length; bt.pos=0; btSave(); renderBT(); }
+  else if(act==='btnext'){ bt.track=(bt.track+1)%BT_TRACKS.length; bt.pos=0; btSave(); renderBT(); }
+});
+function btTel(){
+  if(!bt.paired){ bt.tab='pair'; openApp('bt'); toast('请先配对蓝牙'); return; }
+  if(bt.calling){ bt.calling=null; renderBT(); clog('ok','方控挂断通话'); }
+  else if(bt.ringing){ bt.ringing=false; bt.calling='李娜'; bt.callSec=0; renderBT(); clog('ok','方控接听来电'); }
+  else{ bt.tab='phone'; openApp('bt'); }
+}
+
+/* ---------------- CANBUS / 挡位 / 倒车影像 ---------------- */
+const can={gear:'P', doors:{fl:0,fr:0,rl:0,rr:0,tk:0}, light:false,
+           odo:128453.6, fuel:62, temp:26, water:90, avg:7.2};
+let revDist=1.6, revProbes=[1.6,1.6,1.6,1.6], revTimer=null;
+function setGear(g){
+  g=String(g).toUpperCase();
+  if(!['P','R','N','D'].includes(g)) return clog('err','挡位取值: P / R / N / D');
+  const prev=can.gear; can.gear=g;
+  clog('ok',`CAN 挡位 ${prev} → ${g}`+(g==='R'?' · 切入倒车影像':''));
+  if(g==='R') startRev(); else stopRev();
+  if(curPage==='can') renderCan();
+}
+function startRev(){
+  $('reverseCam').classList.add('active');
+  revDist=1.6; revProbes=[1.6,1.6,1.6,1.6];
+  clearInterval(revTimer);
+  revTimer=setInterval(()=>{
+    revDist=+(revDist-0.11).toFixed(2);
+    if(revDist<=0.25) revDist=1.8;
+    revProbes=revProbes.map(()=>Math.max(0.2, +(revDist+(Math.random()-0.5)*0.3).toFixed(2)));
+    drawRev();
+  },600);
+  drawRev();
+}
+function stopRev(){ $('reverseCam').classList.remove('active'); clearInterval(revTimer); revTimer=null; }
+function drawRev(){
+  const cv=$('revCanvas'); if(!cv) return;
+  const ctx=cv.getContext('2d'), W=800, H=480;
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#1a1d22'); g.addColorStop(.45,'#2b3138'); g.addColorStop(1,'#14171b');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // 地面透视线
+  ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1;
+  for(let i=1;i<=6;i++){ const y=H-40-i*i*11; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  for(let i=-4;i<=4;i++){ ctx.beginPath(); ctx.moveTo(W/2+i*24,H); ctx.lineTo(W/2+i*110,H-260); ctx.stroke(); }
+  // 后方障碍车
+  const cx=W/2, cw=150+revDist*60, cy=H-300-revDist*30;
+  ctx.fillStyle='#3f4a58'; ctx.strokeStyle='#8b949e'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(cx-cw/2, cy, cw, cw*0.55, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#c9d2db'; ctx.font='14px Microsoft YaHei'; ctx.textAlign='center';
+  ctx.fillText(`障碍物 ${revDist.toFixed(1)} m`, cx, cy-10);
+  // 倒车轨迹线（随方向固定左转曲线）
+  const bands=[[60,'#37d67a'],[140,'#ffd34d'],[240,'#ff4d4f']];
+  ctx.lineWidth=8;
+  bands.forEach(([reach,col])=>{
+    const k=Math.min(1, reach/260);
+    ctx.strokeStyle=col; ctx.globalAlpha=.85;
+    ctx.beginPath();
+    ctx.moveTo(cx-140+40*k, H-10);
+    ctx.quadraticCurveTo(cx-100+30*k, H-reach*0.6, cx-70+20*k, H-reach);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx+140-40*k, H-10);
+    ctx.quadraticCurveTo(cx+100-30*k, H-reach*0.6, cx+70-20*k, H-reach);
+    ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+  // OPS 雷达（后 4 探头）
+  ctx.textAlign='left'; ctx.font='13px Consolas';
+  revProbes.forEach((d,i)=>{
+    const x=16+i*118, col=d<0.5?'#ff4d4f':(d<1.0?'#ffd34d':'#37d67a');
+    ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(x, H-56, 108, 40);
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.strokeRect(x, H-56, 108, 40);
+    ctx.fillStyle=col; ctx.font='12px Microsoft YaHei';
+    ctx.fillText(`P${i+1} ${d.toFixed(1)}m`, x+10, H-31);
+  });
+  ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(W-260, H-56, 244, 40);
+  ctx.fillStyle='#ffd34d'; ctx.font='14px Microsoft YaHei';
+  ctx.fillText(revDist<0.6?'⚠ 请注意后方！':'倒车请注意安全', W-244, H-30);
+}
+function renderCan(){
+  const gr=$('gearRow'); gr.innerHTML='';
+  ['P','R','N','D'].forEach(g=>{
+    const b=document.createElement('button');
+    b.className='gearBtn'+(can.gear===g?' on':''); b.textContent=g;
+    b.addEventListener('click',()=>setGear(g));
+    gr.appendChild(b);
+  });
+  const speed=(can.gear==='D'||can.gear==='R')? Math.round(gps.speed*3.6) : 0;
+  $('canTable').innerHTML=`
+    <tr><td>挡位</td><td>${can.gear}</td></tr>
+    <tr><td>车速</td><td>${speed} km/h</td></tr>
+    <tr><td>总里程 ODO</td><td>${can.odo.toFixed(1)} km</td></tr>
+    <tr><td>瞬时油耗</td><td>${speed?(4+speed/12).toFixed(1):'0.0'} L/100km</td></tr>
+    <tr><td>平均油耗</td><td>${can.avg.toFixed(1)} L/100km</td></tr>
+    <tr><td>油量</td><td>${can.fuel.toFixed(0)} %</td></tr>
+    <tr><td>水温</td><td>${can.water} ℃</td></tr>
+    <tr><td>车外温度</td><td>${can.temp} ℃</td></tr>
+    <tr><td>车门</td><td>${Object.entries(can.doors).filter(([,v])=>v).map(([k])=>({fl:'左前',fr:'右前',rl:'左后',rr:'右后',tk:'后备箱'}[k])).join(' ')||'全部关闭'}${Object.values(can.doors).some(Boolean)?' ⚠未关严':''}</td></tr>
+    <tr><td>灯光</td><td>${can.light?'大灯开 · 示宽灯开':'关闭'}</td></tr>
+    <tr><td>倒车雷达 OPS</td><td>${can.gear==='R'?'工作中（后 4 探头）':'待机'}</td></tr>`;
+  drawCar();
+}
+const DOOR_ZONES=[
+  {k:'fl',x:52,y:30,w:38,h:56,lab:'左前门'},{k:'rl',x:52,y:98,w:38,h:56,lab:'左后门'},
+  {k:'fr',x:210,y:30,w:38,h:56,lab:'右前门'},{k:'rr',x:210,y:98,w:38,h:56,lab:'右后门'},
+  {k:'tk',x:95,y:150,w:110,h:30,lab:'后备箱'},
+  {k:'light',x:70,y:0,w:160,h:16,lab:'车灯'}
+];
+function drawCar(){
+  const cv=$('carCanvas'); if(!cv) return;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,300,185);
+  ctx.fillStyle='#20303f'; ctx.strokeStyle='#7fb7e8'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(70,14,160,158,16); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#0c1620'; ctx.beginPath(); ctx.roundRect(95,40,110,70,8); ctx.fill(); // 顶
+  ctx.fillStyle='#33506b'; ctx.fillRect(92,20,116,14); ctx.fillRect(92,140,116,14); // 前后风挡
+  // 车灯
+  ctx.fillStyle=can.light?'#ffe14d':'#444c55';
+  ctx.fillRect(78,8,36,8); ctx.fillRect(186,8,36,8);
+  ctx.fillStyle=can.light?'#ff5f5f':'#444c55';
+  ctx.fillRect(78,170,36,8); ctx.fillRect(186,170,36,8);
+  // 车门
+  DOOR_ZONES.filter(z=>z.k!=='light').forEach(z=>{
+    const open=can.doors[z.k];
+    ctx.strokeStyle=open?'#ff9f43':'#7fb7e8'; ctx.lineWidth=open?4:6;
+    const left=z.x<150;
+    const x=left? (open? z.x-16:z.x+2) : (open? z.x+z.w+16:z.x+z.w-2);
+    ctx.beginPath(); ctx.moveTo(x, z.y+4); ctx.lineTo(x, z.y+z.h-4); ctx.stroke();
+  });
+  ctx.fillStyle='#9fd0ff'; ctx.font='11px Microsoft YaHei'; ctx.textAlign='center';
+  ctx.fillText(can.light?'大灯开':'点击车头开大灯', 150, 8+4);
+}
+$('carCanvas').addEventListener('click',e=>{
+  const r=e.target.getBoundingClientRect();
+  const x=(e.clientX-r.left)*(300/r.width), y=(e.clientY-r.top)*(185/r.height);
+  const z=DOOR_ZONES.find(z=>x>=z.x&&x<=z.x+z.w&&y>=z.y&&y<=z.y+z.h);
+  if(!z) return;
+  if(z.k==='light'){ can.light=!can.light; clog('ok','CAN 灯光: '+(can.light?'大灯开':'关')); }
+  else{ can.doors[z.k]=can.doors[z.k]?0:1; clog('ok','CAN '+z.lab+': '+(can.doors[z.k]?'开':'关')); }
+  renderCan();
+});
+// CAN 报文监视器（500ms 采样）
+setInterval(()=>{
+  if(curPage!=='can') return;
+  const hex=n=>String(n.toString(16).toUpperCase().padStart(2,'0'));
+  const spd=Math.round(gps.speed*3.6);
+  const frames=[
+    `0C0 80 00 00 ${hex(Math.min(255,spd))} 00 00 00 00`,
+    `2C1 0${['P','R','N','D'].indexOf(can.gear)+1} 00 00 00 7F 00 00 00`,
+    `3B0 ${hex(can.doors.fl*8+can.doors.fr*4+can.doors.rl*2+can.doors.rr)} ${can.doors.tk?1:0} 00 00 00 00 00 00`,
+    `123 ${hex(Math.floor(Math.random()*256))} ${hex(can.light?1:0)} ${hex(can.fuel)} 5A 00 00 00 00`,
+    `7E8 03 41 0C ${hex(Math.round(spd*100/256)%256)} 00 00 00 00 00`
+  ];
+  const mon=$('canMon');
+  mon.textContent = `[${ts()}] ${frames[Math.floor(Math.random()*frames.length)]}\n` + mon.textContent.split('\n').slice(0,5).join('\n');
+},500);
+// 行车数据 1s 采样
+setInterval(()=>{
+  if(can.gear==='D'){ can.odo+=gps.speed/3600; can.fuel=Math.max(0,can.fuel-gps.speed/3600*0.004); }
+},1000);
+
+/* ---------------- 媒体播放（SD 音频 · 断点续播） ---------------- */
+const MP_KEY='kld_sim_media_v1';
+function mediaFiles(){ return Object.keys(sd.files).filter(p=>/\.(mp3|wav|wma|ogg|flac|m4a|aac|amr)$/i.test(p)); }
+function trackDur(p){ let h=0; for(const ch of p) h=(h*31+ch.charCodeAt(0))>>>0; return 160+(h%200); }
+function baseName(p){ return p.split('/').pop().replace(/\.[^.]+$/,''); }
+const mp=Object.assign({path:null, playing:false, pos:0, mode:'列表'},
+  (()=>{ try{ return JSON.parse(localStorage.getItem(MP_KEY))||{}; }catch(e){ return {}; } })());
+function mpSave(){ try{ localStorage.setItem(MP_KEY, JSON.stringify(mp)); }catch(e){} }
+function ensureMediaSeed(){
+  const seeds=['/Media/旅行的意义-陈绮贞.mp3','/Media/晴天-周杰伦.mp3','/Media/平凡之路-朴树.mp3'];
+  seeds.forEach(s=>{ if(!(s in sd.files)){ sd.files[s]='[模拟音频] '+baseName(s); } });
+  if(!mp.path) mp.path=seeds[0];
+  saveSD(); mpSave();
+}
+function renderMedia(){
+  const files=mediaFiles();
+  const box=$('mediaList'); box.innerHTML='';
+  if(!files.length) box.innerHTML='<div style="color:#9fd0ff; padding:10px;">SD:\\Media\\ 无音频文件（可从 SD 卡管理安装 .mp3 等）</div>';
+  files.forEach((p,i)=>{
+    const el=document.createElement('div');
+    el.className='tnode'+(mp.path===p?' sel':'');
+    el.innerHTML=(mp.path===p&&mp.playing?'▶ ':'　')+baseName(p);
+    el.addEventListener('click',()=>{ mp.path=p; mp.pos=0; mp.playing=true; mpSave(); renderMedia(); clog('ok','播放 '+p); });
+    box.appendChild(el);
+  });
+  const dur=mp.path?trackDur(mp.path):0;
+  $('mediaTitle').textContent=mp.path?baseName(mp.path):'未加载音轨';
+  $('mediaSub').textContent=mp.path?('SD:'+mp.path+' · '+fmtSec(dur)):'SD:\\Media\\';
+  $('mediaPos').textContent=fmtSec(mp.pos);
+  $('mediaDur').textContent=fmtSec(dur);
+  $('mediaBarFill').style.width=(dur? Math.min(100,mp.pos/dur*100):0)+'%';
+  $('mdPlay').textContent=mp.playing?'⏸ 暂停':'▶ 播放';
+  $('mdMode').textContent='循环:'+mp.mode;
+  $('mediaState').textContent=(mp.playing?'播放中':'就绪')+' · '+(sd.mounted?'SD 已挂载':'SD 未插入');
+}
+function mediaNext(){
+  const f=mediaFiles(); if(!f.length) return;
+  let i=f.indexOf(mp.path);
+  i = mp.mode==='随机' ? Math.floor(Math.random()*f.length) : (i+1)%f.length;
+  mp.path=f[i]; mp.pos=0; mp.playing=true; mpSave(); renderMedia(); clog('ok','下一曲 '+baseName(mp.path));
+}
+function mediaPrev(){
+  const f=mediaFiles(); if(!f.length) return;
+  let i=f.indexOf(mp.path); i=(i-1+f.length)%f.length;
+  mp.path=f[i]; mp.pos=0; mp.playing=true; mpSave(); renderMedia(); clog('ok','上一曲 '+baseName(mp.path));
+}
+$('mdPlay').addEventListener('click',()=>{
+  if(!mp.path){ const f=mediaFiles(); if(!f.length) return toast('无音轨'); mp.path=f[0]; }
+  mp.playing=!mp.playing; mpSave(); renderMedia(); clog('ok','媒体 '+(mp.playing?'播放':'暂停'));
+});
+$('mdNext').addEventListener('click',mediaNext);
+$('mdPrev').addEventListener('click',mediaPrev);
+$('mdMode').addEventListener('click',()=>{
+  mp.mode = mp.mode==='列表'?'单曲':(mp.mode==='单曲'?'随机':'列表');
+  mpSave(); renderMedia(); clog('ok','循环模式: '+mp.mode);
+});
+$('mediaBar').addEventListener('click',e=>{
+  if(!mp.path) return;
+  const r=e.currentTarget.getBoundingClientRect();
+  mp.pos=Math.round((e.clientX-r.left)/r.width*trackDur(mp.path));
+  mpSave(); renderMedia();
+});
+setInterval(()=>{
+  if(!mp.playing||!mp.path) return;
+  mp.pos++;
+  const dur=trackDur(mp.path);
+  if(mp.pos>=dur){
+    if(mp.mode==='单曲') mp.pos=0;
+    else{ mediaNext(); return; }
+  }
+  if(curPage==='media') renderMedia();
+  if(mp.pos%5===0) mpSave();
+},1000);
+// A2DP 蓝牙音乐同步推进
+setInterval(()=>{
+  if(bt.playing && bt.paired){
+    const tr=BT_TRACKS[bt.track%BT_TRACKS.length];
+    bt.pos++;
+    if(bt.pos>=tr.d){ bt.track=(bt.track+1)%BT_TRACKS.length; bt.pos=0; btSave(); }
+    if(curPage==='bt' && bt.tab==='music') renderBT();
+    else if(bt.pos%5===0) btSave();
+  }
+  if(bt.calling){ bt.callSec++; const t=$('callTimer'); if(t) t.textContent=fmtSec(bt.callSec); }
+},1000);
+
+/* ---------------- 设置页扩展渲染（音效/方控/个性化） ---------------- */
+function renderSetExt(){
+  const eb=$('eqBtns'); eb.innerHTML='';
+  Object.keys(EQ_PRESETS).forEach(name=>{
+    const b=document.createElement('button');
+    b.className='btn'+(prefs.audio.eq===name?'':' gray');
+    b.textContent=name+(prefs.audio.eq===name?' ✓':'');
+    b.addEventListener('click',()=>{
+      prefs.audio.eq=name;
+      const p=EQ_PRESETS[name];
+      if(name!=='用户'){ prefs.audio.bass=p.b; prefs.audio.treble=p.t; }
+      savePrefs(); renderSetExt();
+      clog('ok','EQ 预设: '+name+` (高音${prefs.audio.bass} 低音${prefs.audio.treble})`);
+    });
+    eb.appendChild(b);
+  });
+  $('eqBass').value=prefs.audio.bass; $('eqBassV').textContent=prefs.audio.bass;
+  $('eqTreble').value=prefs.audio.treble; $('eqTrebleV').textContent=prefs.audio.treble;
+  $('eqFader').value=prefs.audio.fader; $('eqFaderV').textContent=prefs.audio.fader===0?'中':(prefs.audio.fader>0?'前 '+prefs.audio.fader:'后 '+(-prefs.audio.fader));
+  $('eqBal').value=prefs.audio.bal; $('eqBalV').textContent=prefs.audio.bal===0?'中':(prefs.audio.bal>0?'右 '+prefs.audio.bal:'左 '+(-prefs.audio.bal));
+  $('eqLoud').textContent=prefs.audio.loud?'开 ✓':'关';
+  $('eqLoud').classList.toggle('gray',!prefs.audio.loud);
+  $('eqVol').textContent=vol;
+  renderSwc();
+  $('pfLogo').value=prefs.logo;
+  const pw=$('pfWall'); pw.innerHTML='';
+  WALLS.forEach((w,i)=>{
+    const s=document.createElement('span');
+    s.style.cssText=`display:inline-block; width:44px; height:24px; border-radius:4px; cursor:pointer;
+      background:${w}; border:2px solid ${prefs.wall===i?'#ffd34d':'rgba(255,255,255,.3)'}`;
+    s.title='壁纸 '+(i+1);
+    s.addEventListener('click',()=>{ prefs.wall=i; savePrefs(); applyPrefs(); renderSetExt(); clog('ok','壁纸已切换: '+(i+1)); });
+    pw.appendChild(s);
+  });
+  const pl=$('pfLight'); pl.innerHTML='';
+  LIGHTS.forEach((l,i)=>{
+    const s=document.createElement('span');
+    s.style.cssText=`display:inline-block; width:22px; height:22px; border-radius:50%; cursor:pointer;
+      background:${l.c}; border:2px solid ${prefs.light===i?'#ffd34d':'#333'}`;
+    s.title=l.n;
+    s.addEventListener('click',()=>{ prefs.light=i; savePrefs(); applyPrefs(); renderSetExt(); clog('ok','按键灯色: '+l.n); });
+    pl.appendChild(s);
+  });
+  $('pfBright').value=prefs.bright; $('pfBrightV').textContent=prefs.bright+'%';
+  $('pfClock').textContent=prefs.clock24?'24 小时':'12 小时';
+  $('pfBrake').textContent=prefs.brake?'开 ✓':'关';
+  $('pfBrake').classList.toggle('gray',!prefs.brake);
+}
+$('eqBass').addEventListener('input',e=>{ prefs.audio.bass=+e.target.value; prefs.audio.eq='用户'; savePrefs(); renderSetExt(); });
+$('eqTreble').addEventListener('input',e=>{ prefs.audio.treble=+e.target.value; prefs.audio.eq='用户'; savePrefs(); renderSetExt(); });
+$('eqFader').addEventListener('input',e=>{ prefs.audio.fader=+e.target.value; savePrefs(); renderSetExt(); });
+$('eqBal').addEventListener('input',e=>{ prefs.audio.bal=+e.target.value; savePrefs(); renderSetExt(); });
+$('eqLoud').addEventListener('click',()=>{ prefs.audio.loud=!prefs.audio.loud; savePrefs(); renderSetExt(); clog('ok','Loud: '+(prefs.audio.loud?'开':'关')); });
+$('pfLogoApply').addEventListener('click',()=>{
+  prefs.logo=$('pfLogo').value.trim(); savePrefs();
+  clog('ok','开机 LOGO: '+(prefs.logo||'默认 CE6.0')); toast('已应用');
+});
+$('pfBright').addEventListener('input',e=>{ prefs.bright=+e.target.value; savePrefs(); applyPrefs(); $('pfBrightV').textContent=prefs.bright+'%'; });
+$('pfClock').addEventListener('click',()=>{ prefs.clock24=!prefs.clock24; savePrefs(); renderSetExt(); clog('ok','时间制式: '+(prefs.clock24?'24 小时':'12 小时')); });
+$('pfBrake').addEventListener('click',()=>{ prefs.brake=!prefs.brake; savePrefs(); renderSetExt(); clog('ok','刹车检测线: '+(prefs.brake?'启用':'关闭')); });
+$('swcLearnBtn').addEventListener('click',()=>{
+  learnIdx=0; swcPrompt(); renderSwc(); clog('ok','进入方控学习模式，依次按下 8 个方控键');
+});
+$('swcResetBtn').addEventListener('click',()=>{
+  prefs.swc=defaultSwc(); savePrefs(); learnIdx=-1;
+  $('swcHint').textContent=''; document.querySelectorAll('.swcbtn').forEach(b=>b.classList.remove('learn'));
+  renderSwc(); clog('ok','方控映射已恢复默认');
+});
 
 /* ---------------- 测试控制台（测试通道） ---------------- */
 let consoleOpen=false;
@@ -996,6 +1843,14 @@ function runCmd(cmd){
         'port <COMx> <baud>            写入 naviconfig.txt 端口配置',
         'run <路径>                    运行 SD 上的 exe',
         'route <POI序号|名称>          规划路线',
+        'gear p|r|n|d                  换挡（R 切入倒车影像）',
+        'bt pair|ring|answer|hangup    蓝牙配对/来电/接听/挂断',
+        'eq <关闭|流行|摇滚|古典|影院>  EQ 预设',
+        'vol <0-40>                    音量',
+        'media play|pause|next|prev    媒体播放控制',
+        'can                           CAN 数据快照',
+        'swc learn|status              方控学习/映射查看',
+        'radio seek|scan|fm1..am2      收音机控制',
         'log export                    导出测试日志 (json)',
         'clear                         清屏',
         'reboot / home / nav           系统控制'
@@ -1079,6 +1934,54 @@ function runCmd(cmd){
       if(!p) return clog('err','未找到 POI，可用地名关键字，如: route 加油站');
       show(PAGES.nav); gps.on=true; planRoute(p);
       break; }
+    case 'gear': setGear(args[0]||''); break;
+    case 'bt': {
+      const sub=(args[0]||'').toLowerCase();
+      if(sub==='pair'){ bt.paired=!bt.paired; btSave(); renderBT();
+        clog(bt.paired?'ok':'warn', bt.paired?'蓝牙已配对: TOYOTA-HU':'蓝牙已断开'); }
+      else if(sub==='ring'){ bt.ringing=true; bt.tab='phone'; openApp('bt'); clog('ok','模拟来电: 李娜'); }
+      else if(sub==='answer'){ bt.ringing=false; bt.calling='李娜'; bt.callSec=0; renderBT(); clog('ok','已接听'); }
+      else if(sub==='hangup'){ bt.ringing=false; bt.calling=null; renderBT(); clog('ok','已挂断'); }
+      else if(sub==='music'){ bt.tab='music'; openApp('bt'); }
+      else if(sub==='call'&&args[1]){ bt.calling=args[1]; bt.callSec=0; bt.tab='phone'; openApp('bt'); clog('ok','拨出 '+args[1]); }
+      else clog('err','用法: bt pair|ring|answer|hangup|music|call <号码>');
+      break; }
+    case 'eq': {
+      const name=args.join('');
+      if(!EQ_PRESETS[name]) return clog('err','可用: '+Object.keys(EQ_PRESETS).join(' / '));
+      prefs.audio.eq=name; const p=EQ_PRESETS[name];
+      if(name!=='用户'){ prefs.audio.bass=p.b; prefs.audio.treble=p.t; }
+      savePrefs(); if(curPage==='set') renderSetExt();
+      clog('ok','EQ = '+name+` (高音${prefs.audio.bass} 低音${prefs.audio.treble})`);
+      break; }
+    case 'vol': {
+      if(args[0]===undefined) return clog('ok','当前音量 '+vol+'/40');
+      setVol(parseInt(args[0])||0);
+      break; }
+    case 'media': {
+      const sub=(args[0]||'').toLowerCase();
+      if(sub==='play'){ if(!mp.path){const f=mediaFiles(); if(f.length)mp.path=f[0];} mp.playing=true; mpSave(); renderMedia(); clog('ok','媒体播放'); }
+      else if(sub==='pause'){ mp.playing=false; mpSave(); renderMedia(); clog('ok','媒体暂停'); }
+      else if(sub==='next') mediaNext();
+      else if(sub==='prev') mediaPrev();
+      else if(sub==='list'){ mediaFiles().forEach((p,i)=>clog('ok',`${i}. ${p} (${trackDur(p)}s)`)); }
+      else { mp.path||=(mediaFiles()[0]); openApp('media'); }
+      break; }
+    case 'can':
+      clog('ok', `gear=${can.gear} speed=${Math.round(gps.speed*3.6)}km/h odo=${can.odo.toFixed(1)}km fuel=${can.fuel.toFixed(0)}% water=${can.water}C temp=${can.temp}C doors=${Object.entries(can.doors).filter(([,v])=>v).map(([k])=>k).join(',')||'closed'} light=${can.light?'on':'off'}`);
+      break;
+    case 'swc': {
+      const sub=(args[0]||'').toLowerCase();
+      if(sub==='learn'){ learnIdx=0; swcPrompt(); renderSwc(); clog('ok','进入方控学习模式 (1/8)'); openApp('set'); }
+      else clog('ok','SWC 映射: '+swcMapText());
+      break; }
+    case 'radio': {
+      const sub=(args[0]||'').toLowerCase();
+      if(sub==='seek') radioSeek();
+      else if(sub==='scan') radioScan();
+      else if(BANDS[sub.toUpperCase()]) setBand(sub.toUpperCase());
+      else clog('err','用法: radio seek|scan|FM1|FM2|FM3|AM1|AM2');
+      break; }
     case 'log':
       if((args[0]||'').toLowerCase()==='export') exportLog();
       else clog('ok', LOG.slice(-15).map(l=>l.msg).join('\n'));
@@ -1128,13 +2031,14 @@ $('btnPower').addEventListener('click',()=>{ boot(); });
 $('btnNav').addEventListener('click',()=>{ show(PAGES.nav); gps.on=true; clog('ok','NAV 键 -> 启动导航'); });
 $('btnMenu').addEventListener('click',()=>{ show(PAGES.home); });
 $('btnEjectHw').addEventListener('click',toggleSd);
-let vol=18;
-$('volKnob').addEventListener('click',()=>{ vol=(vol+6)%40; toast('音量 '+vol); clog('ok','VOL = '+vol); });
+$('volKnob').addEventListener('click',()=>setVol(vol+6>40?0:vol+6));
 
 /* ---------------- 时钟 ---------------- */
 setInterval(()=>{
   const d=new Date(), p=n=>String(n).padStart(2,'0');
-  const s=`${p(d.getHours())}:${p(d.getMinutes())}`;
+  let h=d.getHours();
+  if(!prefs.clock24){ h=h%12||12; }
+  const s=`${h}:${p(d.getMinutes())}`.padStart(4,'0');
   $('clk').textContent=s; $('clk2').textContent=s;
 },1000);
 
@@ -1151,17 +2055,25 @@ window.kld = {
   nmea:()=>toNMEA(),
   log:()=>LOG.slice(),
   exportLog,
-  gpsCfg:()=>gpsCfg
+  gpsCfg:()=>gpsCfg,
+  // v0.2 系统层
+  prefs, setGear, swcPhysical, openApp,
+  bt, can, radio, mp,
+  audio:()=>prefs.audio
 };
 
 /* ---------------- 初始化 ---------------- */
 loadSD();
 readNavConfig();
+ensureMediaSeed();
+applyPrefs();
 renderRadio();
 renderTree();
+renderBT();
 drawMap();
 clog('ok','测试通道就绪 · SD 文件数='+Object.keys(sd.files).length+' · 控制台按 F12 打开');
-clog('ok','API: window.kld.{cmd,read,write,run,nmea,gps,exportLog}');
+clog('ok','API: window.kld.{cmd,read,write,run,nmea,gps,setGear,bt,can,radio,prefs,exportLog}');
+clog('ok','系统层 v0.2: 蓝牙/收音机RDS/倒车影像/CAN/方控学习/音效/个性化/媒体');
 boot();
 </script>
 </body>
